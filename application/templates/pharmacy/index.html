@@ -1,0 +1,10 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Home - Pharmacy
+{% endblock %}
+
+{% block content%}
+<h5>Welcome {{ username }} </h5>
+<a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}
