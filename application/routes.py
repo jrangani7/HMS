@@ -14,10 +14,11 @@ def login():
     if request.method == 'POST':
         username=request.form["username"]
         password=request.form["password"]
-        session["username"] = username
-        session.permanent = True
+        
         n= mysql.connect().cursor().execute("SELECT * from userstore where loginid =%s and password=%s",(username,password))
         if n :
+            session["username"] = username
+            session.permanent = True
             if 'AD' in username:
                 return render_template("desk/index.html",username=username,password=password)
             elif 'PH' in username:
