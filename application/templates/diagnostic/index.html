@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content%}
-<h1>This is the Home Page for Diagnostic</h1>
-<h3>Username : {{ username }}</h3>
-<h3>Password : {{ password }}</h3>
+<h5>Welcome {{ username }} </h5>
+<a href="{{url_for('logout')}}">Logout</a>
 {% endblock %}
