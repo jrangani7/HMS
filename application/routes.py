@@ -7,12 +7,16 @@ from application.forms import LoginForm
 def index():
     return render_template("index.html")
 
-@app.route('/login')
-def login():
-    form=LoginForm()
-    return render_template("login.html",form=form)
-
 @app.route('/home')
 def home():
     return render_template("home.html")
 
+@app.route('/login',methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        username=request.form["username"]
+        password=request.form["password"]
+        return render_template("home.html",username=username,password=password)
+
+    form=LoginForm()
+    return render_template("login.html",form=form)
