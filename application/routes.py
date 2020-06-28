@@ -7,10 +7,24 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 
 @app.route('/')
 def index():
+    if 'username' in session:
+        username=session['username']
+        if 'AD' in username:
+            return redirect(url_for('desk_home'))
+        elif 'PH' in username:
+            return render_template(url_for('pharmacy_home'))
+        return render_template(url_for('diagnostic_home')) 
     return render_template("index.html")
 
 @app.route('/login',methods=['GET','POST'])
 def login():
+    if 'username' in session:
+        username=session['username']
+        if 'AD' in username:
+            return redirect(url_for('desk_home'))
+        elif 'PH' in username:
+            return render_template(url_for('pharmacy_home'))
+        return render_template(url_for('diagnostic_home'))
     if request.method == 'POST':
         username=request.form["username"]
         password=request.form["password"]
@@ -20,10 +34,10 @@ def login():
             session["username"] = username
             session.permanent = True
             if 'AD' in username:
-                return render_template("desk/index.html",username=username,password=password)
+                return redirect(url_for('desk_home'))
             elif 'PH' in username:
-                return render_template("pharmacy/index.html",username=username,password=password)
-            return render_template("diagnostic/index.html",username=username,password=password)
+                return render_template(url_for('pharmacy_home'))
+            return render_template(url_for('diagnostic_home'))
         else:
             flash(' Invalid Credentials.')
             return redirect(url_for('login'))
@@ -32,13 +46,25 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop("username",None)
-    return redirecrt(url_for("login"))
+    if 'username' in session:
+        session.pop("username",None)
+    return redirect(url_for("login"))
 
-@app.route('/home')
-def home():
-    if "username" in session:
-        return render_template("home.html",username=session['username'])
-    else:
-        form=LoginForm()
-        return render_template("login.html",form=form)
+@app.route('/desk')
+def desk_home():
+    if 'username' in session and 'AD' in session['username']:
+        return render_template("desk/index.html")
+    return redirect(url_for('login'))
+
+@app.route('/pharmacy')
+def pharmacy_home():
+    if 'username' in session and 'PH' in session['username']:
+        return render_template("pharmacy/index.html")
+    return redirect(url_for('login'))
+
+@app.route('/diagnostic')
+def diagnostic_home():
+    if 'username' in session and 'DS' in session['username']:
+        return render_template("diagnostic/index.html")
+    return redirect(url_for('login'))
+
