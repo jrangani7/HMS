@@ -33,8 +33,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop("username",None)
-    form=LoginForm()
-    return render_template("login.html",form=form)
+    return redirecrt(url_for("login"))
 
 @app.route('/home')
 def home():
