@@ -12,7 +12,7 @@ class LoginForm(FlaskForm):
 # Patient Registration Form #
 class PatientRegistrationForm(FlaskForm):
     pName=StringField('name',validators=[DataRequired()])
-    pAge=IntegerField('age',validators=[DataRequired(),NumberRange(min=1,max=100)])
+    pAge=IntegerField('age',validators=[DataRequired(),NumberRange(min=1,max=999)])
     dateOfSubmission=DateField('date',format='%d-%m-%Y')
     bedType=SelectField('bed',validators=[DataRequired()],choices=['General','Semi Sharing','Single'])
     address=StringField('address')
