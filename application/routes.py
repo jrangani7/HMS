@@ -107,7 +107,7 @@ def diagnostic_home():
     return redirect(url_for('login'))
 
 ################################################################################################
-@app.route('/activepatients')
+@app.route('/desk/activepatients')
 def activepatients():
     if 'username' in session and 'AD' in session['username']:
         curr = mysql.connect().cursor()
