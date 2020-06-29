@@ -4,7 +4,15 @@
     Home - Desk
 {% endblock %}
 
+
+
 {% block content%}
-<h5>Welcome {{ username }} </h5>
-<a href="{{url_for('logout')}}">Logout</a>
+
+{% include "desk/includes/navbar.html"%}
+
+
+
+
+
+
 {% endblock %}
