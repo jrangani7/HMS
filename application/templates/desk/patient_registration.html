@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+
+Patient Registration
+
+{% endblock %}
+
+{% block content%}
+
+{% include "desk/includes/navbar.html" %}
+
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <br>
+                    <div class="card">
+                        <div class="card-header text-center"><strong>Patient Registration Form</strong></div>
+                        <div class="card-body">
+                            <form name="patient registration" action="{{url_for('desk_patient')}}" method="POST">
+
+                                <div class="alert alert-info text-center">
+                                    {% with messages = get_flashed_messages() %}
+                                      {% if messages %}
+                                          <ul class=flashes>
+                                          {% for message in messages %}
+                                          <li>{{ message }}</li>
+                                          {% endfor %}
+                                          </ul>
+                                      {% endif %}
+                                      {% endwith %}
+                                  </div>
+                                
+                                
+                                <div class="form-group row">
+                                    <label for="full_name" class="col-md-4 col-form-label text-md-right">Full Name</label>
+                                    <div class="col-md-6">
+                                        {{form.pName}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Age</label>
+                                    <div class="col-md-6">
+                                        {{form.pAge}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="user_name" class="col-md-4 col-form-label text-md-right">Date of Submission</label>
+                                    <div class="col-md-6">
+                                        {{form.dateOfSubmission}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="phone_number" class="col-md-4 col-form-label text-md-right">Bed Type</label>
+                                    <div class="col-md-6">
+                                        {{form.bedType}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">Address</label>
+                                    <div class="col-md-6">
+                                        {{form.address}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">City</label>
+                                    <div class="col-md-6">
+                                        {{form.city}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">State</label>
+                                    <div class="col-md-6">
+                                        {{form.state}}
+                                    </div>
+                                </div>
+
+                                
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">Status</label>
+                                    <div class="col-md-6">
+                                        {{form.status}}
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6 offset-md-4">
+                                        <button type="submit" class="btn btn-primary btn-lg" formmethod="POST" >
+                                        Register
+                                        </button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock%}
