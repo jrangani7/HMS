@@ -1,6 +1,6 @@
 from application import app
 from flask import render_template,request,session ,flash,redirect,url_for
-from application.forms import LoginForm, PatientRegistrationForm
+from application.forms import LoginForm, PatientRegistrationForm, DeleteForm
 from application import mysql
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -90,7 +90,46 @@ def registerPatient(form):
     except:
         return False #We can add more elaborate exceptions but it doesn't seem like a priority.
 
-     
+#################################################################################################
+
+@app.route('/desk/patientdelete',methods=['GET','POST'])
+
+def desk_patientdel():
+    if 'username' in session and 'AD' in session['username']:
+        form=DeleteForm(request.form)
+        if request.method=='POST':
+            if request.form['action'] == 'show':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "SELECT * FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                pdata=cursor.fetchall()
+                cursor.close()
+                con.commit()
+                con.close()
+                if pdata:
+                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form)
+                else:
+                    flash("Patient not Found")
+                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form)
+            elif request.form['action'] == 'delete':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "DELETE FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                cursor.close()
+                con.commit()
+                con.close()
+                return render_template("desk/patient_delete.html",form=form)
+
+        else:
+            return render_template("desk/patient_delete.html",form=form)
+    else:
+        return redirect(url_for('login'))
+
+
+
+
     
 #################################################################################################
 @app.route('/pharmacy')
