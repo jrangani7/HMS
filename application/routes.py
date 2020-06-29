@@ -119,4 +119,11 @@ def activepatients():
             return render_template("desk/activepatients.html")
 
     else:
-        return redirect(url_for('login'))
+        if 'username' in session:
+            if 'AD' in session['username']:
+                return redirect(url_for('desk_home'))
+            elif 'PH' in session['username']:
+                return redirect(url_for('pharmacy_home'))
+            return redirect(url_for('diagnostic_home'))
+        else:
+            return redirect(url_for('login'))
