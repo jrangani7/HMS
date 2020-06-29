@@ -16,17 +16,19 @@
                         <div class="card-header text-center"><strong>Delete Patient Details</strong></div>
                         <div class="card-body ">
                             <form name="patient delete" action="{{url_for('desk_patientdel')}}" method="POST">
-                                <div>
+                                <div class="text-center">
                                     <label for="patid">Patient ID: </label>
-                                    <div class="col-md-6">
+                                    <div class="text-center">
                                         {{form.pid}}
                                     </div>
-                                </div>
-                                <div class="col-md-6 offset-md-4 ">
+                                </div class="text-center" >
+                                <div class="text-center">
                                     <button type="submit" name="action" value="show" class="btn btn-primary btn-lg" formmethod="POST" >
                                     Show
                                     </button>
                             </div>
+
+                            <br>
                             
                                 <div class="alert alert-info text-center">
                                     {% with messages = get_flashed_messages() %}
