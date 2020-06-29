@@ -17,7 +17,10 @@ Login
               <div id="login-column" class="col-md-6">
                   <div id="login-box" class="col-md-12 border">
                       <form id="login-form" class="form" action="{{url_for('login')}}" method="POST">
+                         
+                        <div class="alert-primary">
                           <h3 class="text-center text-info">Login</h3>
+                        </div> 
                           <br>
                           
                           <div class="form-group text-center">
@@ -33,7 +36,8 @@ Login
                           <div class="form-group text-center">
                               <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
                           </div>
-                          
+                        
+                        <div class="alert alert-info text-center">
                           {% with messages = get_flashed_messages() %}
                             {% if messages %}
                                 <ul class=flashes>
@@ -43,6 +47,7 @@ Login
                                 </ul>
                             {% endif %}
                             {% endwith %}
+                        </div>
                       </form>
                   </div>
               </div>
