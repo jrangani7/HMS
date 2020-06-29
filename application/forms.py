@@ -18,6 +18,7 @@ class PatientRegistrationForm(FlaskForm):
     address=StringField('address')
     city=StringField('city')
     state=StringField('state')
+    uid=IntegerField('aadhar')
     status=SelectField('status',validators=[DataRequired()],choices=['Active','Discharged'])
     
 
