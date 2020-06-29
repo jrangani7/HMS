@@ -1,6 +1,6 @@
 from application import app
 from flask import render_template,request,session ,flash,redirect,url_for
-from application.forms import LoginForm, PatientRegistrationForm
+from application.forms import LoginForm, PatientRegistrationForm, DeleteForm
 from application import mysql
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -67,7 +67,7 @@ def desk_patient():
     if 'username' in session and 'AD' in session['username']:
         form=PatientRegistrationForm(request.form)
         if request.method=='POST':
-            status=registerPatient(session['username'],form)
+            status=registerPatient(form)
             if status:
                 flash("Registration Sucessfull !!")
                 return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
@@ -79,18 +79,57 @@ def desk_patient():
     else:
         return redirect(url_for('login'))
 
-def registerPatient(uid,form):
+def registerPatient(form):
     try:
         con=mysql.connect()
         cursor=con.cursor()
-        status=cursor.execute("INSERT INTO patient(uid,name,age,doadmission,bedtype,address,city,state,status) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(uid,form.pName.data,form.pAge.data,form.dateOfSubmission.data,form.bedType.data,form.address.data,form.city.data,form.state.data,form.status.data))
+        status=cursor.execute("INSERT INTO patient(uid,name,age,doadmission,bedtype,address,city,state,status) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(form.uid.data,form.pName.data,form.pAge.data,form.dateOfSubmission.data,form.bedType.data,form.address.data,form.city.data,form.state.data,form.status.data))
         con.commit()
         con.close()  
         return status 
     except:
         return False #We can add more elaborate exceptions but it doesn't seem like a priority.
 
-     
+#################################################################################################
+
+@app.route('/desk/patientdelete',methods=['GET','POST'])
+
+def desk_patientdel():
+    if 'username' in session and 'AD' in session['username']:
+        form=DeleteForm(request.form)
+        if request.method=='POST':
+            if request.form['action'] == 'show':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "SELECT * FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                pdata=cursor.fetchall()
+                cursor.close()
+                con.commit()
+                con.close()
+                if pdata:
+                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form)
+                else:
+                    flash("Patient not Found")
+                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form)
+            elif request.form['action'] == 'delete':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "DELETE FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                cursor.close()
+                con.commit()
+                con.close()
+                return render_template("desk/patient_delete.html",form=form)
+
+        else:
+            return render_template("desk/patient_delete.html",form=form)
+    else:
+        return redirect(url_for('login'))
+
+
+
+
     
 #################################################################################################
 @app.route('/pharmacy')
@@ -107,7 +146,7 @@ def diagnostic_home():
     return redirect(url_for('login'))
 
 ################################################################################################
-@app.route('/activepatients')
+@app.route('/desk/activepatients')
 def activepatients():
     if 'username' in session and 'AD' in session['username']:
         curr = mysql.connect().cursor()
