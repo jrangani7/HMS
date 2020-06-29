@@ -21,4 +21,7 @@ class PatientRegistrationForm(FlaskForm):
     uid=IntegerField('aadhar')
     status=SelectField('status',validators=[DataRequired()],choices=['Active','Discharged'])
     
-
+  ###################################################################################
+### Patient Delete Form
+class DeleteForm(FlaskForm):
+    pid=IntegerField('patID')
