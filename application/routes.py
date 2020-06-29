@@ -67,7 +67,7 @@ def desk_patient():
     if 'username' in session and 'AD' in session['username']:
         form=PatientRegistrationForm(request.form)
         if request.method=='POST':
-            status=registerPatient(session['username'],form)
+            status=registerPatient(form)
             if status:
                 flash("Registration Sucessfull !!")
                 return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
@@ -79,11 +79,11 @@ def desk_patient():
     else:
         return redirect(url_for('login'))
 
-def registerPatient(uid,form):
+def registerPatient(form):
     try:
         con=mysql.connect()
         cursor=con.cursor()
-        status=cursor.execute("INSERT INTO patient(uid,name,age,doadmission,bedtype,address,city,state,status) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(uid,form.pName.data,form.pAge.data,form.dateOfSubmission.data,form.bedType.data,form.address.data,form.city.data,form.state.data,form.status.data))
+        status=cursor.execute("INSERT INTO patient(uid,name,age,doadmission,bedtype,address,city,state,status) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)",(form.uid.data,form.pName.data,form.pAge.data,form.dateOfSubmission.data,form.bedType.data,form.address.data,form.city.data,form.state.data,form.status.data))
         con.commit()
         con.close()  
         return status 
