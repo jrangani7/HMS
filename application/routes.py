@@ -107,3 +107,23 @@ def diagnostic_home():
     return redirect(url_for('login'))
 
 ################################################################################################
+@app.route('/activepatients')
+def activepatients():
+    if 'username' in session and 'AD' in session['username']:
+        curr = mysql.connect().cursor()
+        curr.execute("select * from patient where status='Active'")
+        data = curr.fetchall()
+        if curr.rowcount > 0:
+            return render_template("desk/activepatients.html",data=data)
+        else:
+            return render_template("desk/activepatients.html")
+
+    else:
+        if 'username' in session:
+            if 'AD' in session['username']:
+                return redirect(url_for('desk_home'))
+            elif 'PH' in session['username']:
+                return redirect(url_for('pharmacy_home'))
+            return redirect(url_for('diagnostic_home'))
+        else:
+            return redirect(url_for('login'))
