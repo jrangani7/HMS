@@ -14,8 +14,8 @@ def index():
         if 'AD' in username:
             return redirect(url_for('desk_home'))
         elif 'PH' in username:
-            return render_template(url_for('pharmacy_home'))
-        return render_template(url_for('diagnostic_home')) 
+            return redirect(url_for('pharmacy_home'))
+        return redirect(url_for('diagnostic_home')) 
     return render_template("index.html")
 
 ######################################################################################
@@ -26,8 +26,8 @@ def login():
         if 'AD' in username:
             return redirect(url_for('desk_home'))
         elif 'PH' in username:
-            return render_template(url_for('pharmacy_home'))
-        return render_template(url_for('diagnostic_home'))
+            return redirect(url_for('pharmacy_home'))
+        return redirect(url_for('diagnostic_home'))
     if request.method == 'POST':
         username=request.form["username"]
         password=request.form["password"]
@@ -39,8 +39,8 @@ def login():
             if 'AD' in username:
                 return redirect(url_for('desk_home'))
             elif 'PH' in username:
-                return render_template(url_for('pharmacy_home'))
-            return render_template(url_for('diagnostic_home'))
+                return redirect(url_for('pharmacy_home'))
+            return redirect(url_for('diagnostic_home'))
         else:
             flash(' Invalid Credentials.')
             return redirect(url_for('login'))
