@@ -30,17 +30,18 @@
 
                             <br>
                             
-                                <div class="alert alert-info text-center">
+                                
                                     {% with messages = get_flashed_messages() %}
                                       {% if messages %}
+                                      <div class="alert alert-info text-center">
                                           <ul class=flashes>
                                           {% for message in messages %}
                                           <li>{{ message }}</li>
                                           {% endfor %}
                                           </ul>
+                                        </div>
                                       {% endif %}
                                       {% endwith %}
-                                  </div>
                                 
                                   {% for row in rudtest %}
                                   
