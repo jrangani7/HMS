@@ -54,3 +54,9 @@ class UpdatePatientForm(FlaskForm):
       self.city.data=pdata[7]
       self.state.data=pdata[8]
       self.status.data=pdata[9]
+
+#######################################################################################################
+# patient search form
+class SearchForm(FlaskForm):
+    pid=IntegerField('patID')
+

@@ -27,7 +27,7 @@ CREATE TABLE `diagnostic_tests` (
   `tname` varchar(45) NOT NULL,
   `charge` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,7 +54,7 @@ CREATE TABLE `diagnostic_tests_conducted` (
   KEY `tid_idx` (`tid`),
   CONSTRAINT `pid_dt` FOREIGN KEY (`pid`) REFERENCES `patient` (`id`),
   CONSTRAINT `tid_dt` FOREIGN KEY (`tid`) REFERENCES `diagnostic_tests` (`tid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -82,7 +82,7 @@ CREATE TABLE `issued_medicines` (
   KEY `mid_idx` (`mid`),
   CONSTRAINT `mid` FOREIGN KEY (`mid`) REFERENCES `medicine_inventory` (`mid`),
   CONSTRAINT `pid` FOREIGN KEY (`pid`) REFERENCES `patient` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ CREATE TABLE `medicine_inventory` (
   `quantity` int NOT NULL DEFAULT '0',
   `rate` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`mid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -140,7 +140,7 @@ CREATE TABLE `patient` (
   `state` varchar(20) NOT NULL,
   `status` varchar(10) NOT NULL DEFAULT 'Active',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +165,7 @@ CREATE TABLE `userstore` (
   `password` varchar(10) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`loginid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
