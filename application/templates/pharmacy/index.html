@@ -7,4 +7,8 @@
 {% block content%}
 <h5>Welcome {{ username }} </h5>
 <a href="{{url_for('logout')}}">Logout</a>
+
+<div class="container text-center">
+    <a href="{{url_for('medInven')}}"><button class="btn btn-primary">Inventory</button></a>
+</div>
 {% endblock %}

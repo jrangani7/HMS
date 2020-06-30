@@ -54,3 +54,8 @@ class UpdatePatientForm(FlaskForm):
       self.city.data=pdata[7]
       self.state.data=pdata[8]
       self.status.data=pdata[9]
+
+#################################################################
+### Pharmacy check inventory form
+class PHInventoryForm(FlaskForm):
+    mid=IntegerField('patmedID')

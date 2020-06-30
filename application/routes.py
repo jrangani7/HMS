@@ -1,6 +1,6 @@
 from application import app
 from flask import render_template,request,session ,flash,redirect,url_for
-from application.forms import LoginForm, PatientRegistrationForm, DeleteForm,UpdatePatientForm
+from application.forms import LoginForm, PatientRegistrationForm, DeleteForm,UpdatePatientForm, PHInventoryForm
 from application import mysql
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -213,6 +213,31 @@ def pharmacy_home():
     if 'username' in session and 'PH' in session['username']:
         return render_template("pharmacy/index.html")
     return redirect(url_for('login'))
+
+
+###################################################################################################
+
+@app.route('/pharmacy/medicineInventory')
+def medInven():
+    if 'username' in session and 'PH' in session['username']:
+        form=PHInventoryForm(request.form)
+        curr = mysql.connect().cursor()
+        curr.execute("select * from medicine_inventory")
+        data = curr.fetchall()
+        if curr.rowcount > 0:
+            return render_template("pharmacy/new_medicine.html",data=data)
+        # else:
+        #     return render_template("pharmacy/medicine_issue.html")
+
+    else:
+        if 'username' in session:
+            if 'AD' in session['username']:
+                return redirect(url_for('desk_home'))
+            return redirect(url_for('diagnostic_home'))
+        else:
+            return redirect(url_for('login'))
+
+
 
 #################################################################################################
 @app.route('/diagnostic')
