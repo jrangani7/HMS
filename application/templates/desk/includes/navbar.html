@@ -10,12 +10,23 @@
         <li class="nav-item active">
           <a class="nav-link" href="{{url_for('desk_home')}}">Home</a>
         </li>
+     
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('activepatients')}}">Active Patient</a>
         </li>
+     
         <li class="nav-item">
           <a class="nav-link" href="{{url_for('desk_patient')}}">Patient Registration</a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('desk_patient_update')}}">Update Patient</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{{url_for('desk_patientdel')}}">Delete Patient</a>
+        </li>
+
 
 
       </ul>
@@ -24,6 +35,6 @@
       </form>
     </div>
   </nav>
-
+<hr>
 
 {% endblock %}

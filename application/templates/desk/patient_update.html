@@ -1,13 +1,10 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-
-Patient Registration
-
+    Desk - Update Patient
 {% endblock %}
 
 {% block content%}
-
 {% include "desk/includes/navbar.html" %}
 
 <main class="my-form">
@@ -16,10 +13,36 @@ Patient Registration
             <div class="col-md-8">
                 <br>
                     <div class="card">
-                        <div class="card-header text-center"><strong>Patient Registration Form</strong></div>
-                        <div class="card-body">
-                            <form name="patient registration" action="{{url_for('desk_patient')}}" method="POST">
+                        <div class="card-header text-center"><strong>Update Patient Details</strong></div>
+                        <div class="card-body ">
+                            <form name="patient delete" action="{{url_for('desk_patient_update')}}" method="POST">
+                                <div class="text-center">
+                                    <label for="patid">Patient ID: </label>
+                                    <div class="text-center">
+                                        {% if update %}
+                                            {{ pid }}
+                                            
+                                        {% else %}
+                                            {{form.pid}}
+                                        {% endif %}
+                                    </div>
+                                </div class="text-center" >
+                                <div class="text-center">
+                                    {% if update %}
+                                        <button type="submit" name="action" value="discrad" class="btn btn-primary btn-lg" formmethod="POST" >
+                                            Discard Changes
+                                            </button>
+                                            
+                                    {% else %}
+                                        <button type="submit" name="action" value="show" class="btn btn-primary btn-lg" formmethod="POST" >
+                                            Show Details
+                                            </button>
+                                    {% endif %}
+                                    
+                            </div>
 
+                            <br>
+                            
                                 
                                     {% with messages = get_flashed_messages() %}
                                       {% if messages %}
@@ -32,10 +55,10 @@ Patient Registration
                                         </div>
                                       {% endif %}
                                       {% endwith %}
+                                
+                                  {% if update %}
                                   
-                                
-                                
-                                <div class="form-group row">
+                                  <div class="form-group row">
                                     <label for="full_name" class="col-md-4 col-form-label text-md-right">Full Name</label>
                                     <div class="col-md-6">
                                         {{form.pName}}
@@ -98,14 +121,13 @@ Patient Registration
                                         {{form.status}}
                                     </div>
                                 </div>
-
-
-                                <div class="col-md-6 offset-md-4">
-                                        <button type="submit" class="btn btn-primary btn-lg" formmethod="POST" >
-                                        Register
-                                        </button>
-                                </div>
                                 
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" name="action" value="update" class="btn btn-primary btn-lg" formmethod="POST" >
+                                    Update
+                                    </button>
+                                </div>
+                                {% endif %}
                             </form>
                         </div>
                     </div>
@@ -116,3 +138,5 @@ Patient Registration
 </main>
 
 {% endblock%}
+
+

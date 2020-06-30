@@ -1,0 +1,123 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Desk - Delete
+{% endblock %}
+
+{% block content%}
+{% include "desk/includes/navbar.html" %}
+
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <br>
+                    <div class="card">
+                        <div class="card-header text-center"><strong>Delete Patient Details</strong></div>
+                        <div class="card-body ">
+                            <form name="patient delete" action="{{url_for('desk_patientdel')}}" method="POST">
+                                <div class="text-center">
+                                    <label for="patid">Patient ID: </label>
+                                    <div class="text-center">
+                                        {{form.pid}}
+                                    </div>
+                                </div class="text-center" >
+                                <div class="text-center">
+                                    <button type="submit" name="action" value="show" class="btn btn-primary btn-lg" formmethod="POST" >
+                                    Show
+                                    </button>
+                            </div>
+
+                            <br>
+                            
+                                
+                                    {% with messages = get_flashed_messages() %}
+                                      {% if messages %}
+                                      <div class="alert alert-info text-center">
+                                          <ul class=flashes>
+                                          {% for message in messages %}
+                                          <li>{{ message }}</li>
+                                          {% endfor %}
+                                          </ul>
+                                        </div>
+                                      {% endif %}
+                                      {% endwith %}
+                                
+                                  {% for row in rudtest %}
+                                  
+                                <div class="form-group row">
+                                    <label for="full_name" class="col-md-4 col-form-label text-md-right">Full Name</label>
+                                    
+                                    <div class="col-md-6">
+                                        {{row[2]}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="email_address" class="col-md-4 col-form-label text-md-right">Age</label>
+                                    <div class="col-md-6">
+                                        {{row[3]}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="user_name" class="col-md-4 col-form-label text-md-right">Date of Submission</label>
+                                    <div class="col-md-6">
+                                        {{row[4]}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="phone_number" class="col-md-4 col-form-label text-md-right">Bed Type</label>
+                                    <div class="col-md-6">
+                                        {{row[5]}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">Address</label>
+                                    <div class="col-md-6">
+                                        {{row[6]}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">City</label>
+                                    <div class="col-md-6">
+                                        {{row[7]}}
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">State</label>
+                                    <div class="col-md-6">
+                                        {{row[8]}}
+                                    </div>
+                                </div>
+
+                                
+                                <div class="form-group row">
+                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">Status</label>
+                                    <div class="col-md-6">
+                                        {{row[9]}}
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 offset-md-4">
+                                    <button type="submit" name="action" value="delete" class="btn btn-primary btn-lg" formmethod="POST" >
+                                    Delete
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </form>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+{% endblock%}
+
+
