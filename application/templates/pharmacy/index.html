@@ -5,6 +5,5 @@
 {% endblock %}
 
 {% block content%}
-<h5>Welcome {{ username }} </h5>
-<a href="{{url_for('logout')}}">Logout</a>
+{% include "pharmacy/includes/pharmacy_navbar.html"%}
 {% endblock %}
