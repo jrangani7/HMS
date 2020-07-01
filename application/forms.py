@@ -60,3 +60,13 @@ class UpdatePatientForm(FlaskForm):
 class SearchForm(FlaskForm):
     pid=IntegerField('patID')
 
+######################################################################################################
+class IssueMedicineForm(FlaskForm):
+    mid=IntegerField('med_id')
+    quantity=IntegerField('quantity')
+    dateOfIssue=DateField('doi',format='%d-%m-%Y')
+
+
+class IssueDiagnosticForm(FlaskForm):
+    tid=IntegerField('test_id')
+
