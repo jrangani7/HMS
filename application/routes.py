@@ -1,6 +1,6 @@
 from application import app
 from flask import render_template,request,session ,flash,redirect,url_for
-from application.forms import LoginForm, PatientRegistrationForm, DeleteForm,UpdatePatientForm
+from application.forms import LoginForm, PatientRegistrationForm,SearchForm, DeleteForm,UpdatePatientForm,IssueMedicineForm,IssueDiagnosticForm
 from application import mysql
 from datetime import timedelta
 app.permanent_session_lifetime = timedelta(minutes=30)
@@ -208,15 +208,275 @@ def activepatients():
 
 
 #################################################################################################
+
+''' Pharmacy Pages and Routes  '''
+
 @app.route('/pharmacy')
 def pharmacy_home():
     if 'username' in session and 'PH' in session['username']:
         return render_template("pharmacy/index.html")
     return redirect(url_for('login'))
 
+@app.route('/pharmacy/search_medicines',methods=['GET','POST'])
+def search_patients():
+    if 'username' in session and 'PH' in session['username']:
+            form = SearchForm(request.form)
+            if request.method == 'POST':
+                    con=mysql.connect()
+                    
+                    cursor1=con.cursor()
+                    query1 = "SELECT * FROM patient WHERE id = %s "
+                    cursor1.execute(query1, (form.pid.data))
+                    pdata=cursor1.fetchall()
+
+
+                    cursor2=con.cursor()
+                    query2 = "select medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate,medicine_inventory.rate*issued_medicines.quantity_issued from medicine_inventory INNER JOIN issued_medicines ON medicine_inventory.mid = issued_medicines.mid where issued_medicines.pid = %s"
+                    cursor2.execute(query2, (form.pid.data,))
+                    mdata=cursor2.fetchall()
+
+                    session['pdata']=pdata
+                    session['mdata']=mdata
+                    session['pid']=form.pid.data
+
+
+                    cursor1.close()
+                    cursor2.close()
+                    con.commit()
+                    con.close()
+                
+                    if pdata:
+                        return redirect(url_for("display_patient_details"))
+                    else:
+                        flash("Patient is not registered! Please check ID again!")
+                        return render_template("pharmacy/search_patient.html",form=form)
+            
+            else:
+                return render_template("pharmacy/search_patient.html",form=form)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/pharmacy/display_details',methods=['GET','POST'])
+def display_patient_details():
+    if 'username' in session and 'PH' in session['username']:
+       return render_template('pharmacy/display_patient_details.html',pdata=session['pdata'],mdata=session['mdata'])
+    else:
+        return redirect(url_for('login'))
+
+
+
+@app.route('/pharmacy/issue_medicines',methods=['GET','POST'])
+def issue_medicines():
+    meddata=get_med_inventory()
+    if 'username' in session and 'PH' in session['username']:
+        form=IssueMedicineForm(request.form)
+        if request.method=="POST":
+            issueid=form.mid.data
+            quantity=form.quantity.data
+            doi=form.dateOfIssue.data
+            if meddata:
+                med=get_medicine(issueid)
+                if issueid==med[0][0]:
+                    if quantity<=med[0][2]:
+                        status=issue(issueid,quantity,doi)
+                        meddata=update_inventory(quantity,issueid)
+                        if status:
+                            flash("Medicines Issued and Database Updated !")
+                            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+                        else:
+                            flash("Something Went Wrong !")
+                            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+                    else:
+                        flash("Medicine not available in that quantity !")
+                        return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+                else:
+                    flash("Medicine not in Database !")
+                    return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+            else:
+                flash("Out of Medicines !")
+                return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+        else:
+            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+    else:
+        return redirect(url_for('login'))
+
+#Get Medicine to be issued
+def get_medicine(issueid):
+    con=mysql.connect()
+    cursor=con.cursor()
+    cursor.execute("SELECT * FROM medicine_inventory WHERE mid=%s",issueid)
+    med=cursor.fetchall()
+    cursor.close()
+    con.commit()
+    con.close()
+    return med
+
+#Get Complete updated Medicine Inventory
+def get_med_inventory():
+        con=mysql.connect()
+        cursor=con.cursor()
+        cursor.execute("SELECT * FROM medicine_inventory ")
+        meddata=cursor.fetchall()
+        cursor.close()
+        con.commit()
+        con.close()
+        return meddata
+
+#Issue the required medicine
+def issue(issueid,quantity,doi):
+    try:
+        con=mysql.connect()
+        cursor=con.cursor()
+        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s,%s)",(session['pid'],issueid,quantity,doi))
+        con.commit()
+        cursor.close()
+        con.close()
+        return True
+    except:
+        return False 
+
+#Update Inventory after issuing
+def update_inventory(quantity,issueid):
+    con=mysql.connect()
+    con=mysql.connect()
+    cursor=con.cursor()
+    cursor.execute("UPDATE medicine_inventory SET quantity = quantity-%s WHERE mid = %s and quantity >= 0",(quantity,issueid))
+    cursor1=con.cursor()
+    cursor1.execute("SELECT * FROM medicine_inventory")
+    meddata=cursor1.fetchall()
+    con.commit()
+    cursor1.close()
+    cursor.close()
+    con.close()
+    return meddata
+       
+
+
 #################################################################################################
+
+'''Diagnostics Pages and Routes '''
+
 @app.route('/diagnostic')
 def diagnostic_home():
     if 'username' in session and 'DS' in session['username']:
         return render_template("diagnostic/index.html")
     return redirect(url_for('login'))
+
+
+
+@app.route('/diagnostic/search_diagnostics',methods=['GET','POST'])
+def search_diagnostics():
+    if 'username' in session and 'DS' in session['username']:
+            form = SearchForm(request.form)
+            if request.method == 'POST':
+                    con=mysql.connect()
+                    
+                    cursor1=con.cursor()
+                    query1 = "SELECT * FROM patient WHERE id = %s "
+                    cursor1.execute(query1, (form.pid.data))
+                    pdata=cursor1.fetchall()
+
+
+                    cursor2=con.cursor()
+                    query2 = "select diagnostic_tests.tid,diagnostic_tests.tname,diagnostic_tests.charge FROM diagnostic_tests INNER JOIN diagnostic_tests_conducted ON diagnostic_tests.tid = diagnostic_tests_conducted.tid where diagnostic_tests_conducted.pid = %s"
+                    cursor2.execute(query2, (form.pid.data))
+                    ddata=cursor2.fetchall()
+
+                    session['pdata']=pdata
+                    session['ddata']=ddata
+                    session['pid']=form.pid.data
+
+
+                    cursor1.close()
+                    cursor2.close()
+                    con.commit()
+                    con.close()
+                
+                    if pdata:
+                        return redirect(url_for("display_diagnostic_details"))
+                    else:
+                        flash("Patient is not registered! Please check ID again!")
+                        return render_template("diagnostic/search_diagnostics.html",form=form)
+            
+            else:
+                return render_template("diagnostic/search_diagnostics.html",form=form)
+    else:
+        return redirect(url_for('login'))
+
+
+
+
+@app.route('/diagnostic/display_details',methods=['GET','POST'])
+def display_diagnostic_details():
+    if 'username' in session and 'DS' in session['username']:
+       return render_template('diagnostic/display_diagnostic_details.html',pdata=session['pdata'],ddata=session['ddata'])
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/diagnostic/issue_diagnostics',methods=['GET','POST'])
+def issue_diagnostics():
+    testdata=available_tests()
+    if 'username' in session and 'DS' in session['username']:
+        form=IssueDiagnosticForm(request.form)
+        if request.method=="POST":
+            issueid=form.tid.data
+            test=get_diagnostic(issueid)
+            if test:
+                if issueid==test[0][0]:
+                    status=issue_test(issueid)
+                    if status:
+                        flash("Diagnosic Tests Issued!")
+                        return render_template('diagnostic/issue_diagnostics.html',form=form,diagdata=testdata)
+                    else:
+                        flash("Something Went Wrong !")
+                        return render_template('diagnostic/issue_diagnostics.html',form=form,diagdata=testdata)
+                    
+                else:
+                    flash("Test not available !")
+                    return render_template('diagnostic/issue_diagnostics.html',form=form,diagdata=testdata)
+            else:
+                flash("Wrong Test Id ! Please refer Available Tests 1")
+                return render_template('diagnostic/issue_diagnostics.html',form=form,diagdata=testdata)
+        else:
+            return render_template('diagnostic/issue_diagnostics.html',form=form,diagdata=testdata)
+    else:
+        return redirect(url_for('login'))
+
+#get required diagnostic
+def get_diagnostic(issueid):
+    con=mysql.connect()
+    cursor=con.cursor()
+    cursor.execute("SELECT * FROM diagnostic_tests WHERE tid=%s",issueid)
+    med=cursor.fetchall()
+    cursor.close()
+    con.commit()
+    con.close()
+    return med
+
+#issue the test
+def issue_test(issueid):
+    try:
+        con=mysql.connect()
+        cursor=con.cursor()
+        cursor.execute("INSERT INTO diagnostic_tests_conducted VALUES(%s,%s)",(session['pid'],issueid))
+        con.commit()
+        cursor.close()
+        con.close()
+        return True
+    except:
+        return False 
+
+#get available tests for reference
+def available_tests():
+        con=mysql.connect()
+        cursor=con.cursor()
+        cursor.execute("SELECT * FROM diagnostic_tests ")
+        data=cursor.fetchall()
+        cursor.close()
+        con.commit()
+        con.close()
+        return data
+    
+##################################################################################################

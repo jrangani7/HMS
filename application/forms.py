@@ -54,3 +54,19 @@ class UpdatePatientForm(FlaskForm):
       self.city.data=pdata[7]
       self.state.data=pdata[8]
       self.status.data=pdata[9]
+
+#######################################################################################################
+# patient search form
+class SearchForm(FlaskForm):
+    pid=IntegerField('patID')
+
+######################################################################################################
+class IssueMedicineForm(FlaskForm):
+    mid=IntegerField('med_id')
+    quantity=IntegerField('quantity')
+    dateOfIssue=DateField('doi',format='%d-%m-%Y')
+
+
+class IssueDiagnosticForm(FlaskForm):
+    tid=IntegerField('test_id')
+

@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Diagnostic - Search Patient Details
+{% endblock %}
+
+{% block content%}
+{% include "diagnostic/includes/diagnostic_navbar.html" %}
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <br>
+                    <div class="card">
+                        <div class="card-header text-center"><strong>Issue Diagnostic Tests</strong></div>
+                        <div class="card-body ">
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            <div class="alert alert-danger text-center">
+                                <ul class=flashes>
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                                </ul>
+                              </div>
+                            {% endif %}
+                            {% endwith %}
+                            
+                            <form name="patient display" action="{{url_for('search_diagnostics')}}" method="POST">
+                                <div class="text-center">
+                                    <label for="patid">Patient ID: </label>
+                                    <div class="text-center">
+                                        {{form.pid}}
+                                    </div>
+                                </div class="text-center" >
+                                <div class="text-center">
+                                    <button type="submit" name="action" value="show" class="btn btn-primary btn-lg" formmethod="POST" >
+                                    Show Patient details and Tests issued
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+{% endblock%}
+    
