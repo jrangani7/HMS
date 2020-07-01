@@ -1,0 +1,77 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Diagnostics- Issue Tests
+{% endblock %}
+
+{% block content%}
+{% include "diagnostic/includes/diagnostic_navbar.html" %}
+<div class="container-top">
+    <div class="container-fluid">
+        <h2 class="text-center">Diagnostics Available</h2>
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Charge</th>
+            </thead>
+            <tbody>
+                {% for data in diagdata %}
+              <tr>
+                
+                <th scope="row">{{data[0]}}</th>
+                <td>{{data[1]}}</td>
+                <td>{{data[2]}}</td>
+              </tr>
+                {% endfor%}
+            </tbody>
+          </table>
+    </div>
+
+    <div class="container-fluid text-center">
+        <main class="my-form">
+            <div class="cotainer">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <br>
+                            <div class="card">
+                                <div class="card-header text-center"><strong>Issue Diagnostics</strong></div>
+                                <div class="card-body ">
+                                    {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                    <div class="alert alert-danger text-center">
+                                        <ul class=flashes>
+                                        {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                      </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    
+                                    <form name="patient display" action="{{url_for('issue_diagnostics')}}" method="POST">
+                                        <div class="text-center">
+                                            <label for="patid">Test ID: </label>
+                                            <div class="text-center">
+                                                {{form.tid}}
+                                            </div>
+                                        </div>
+
+                                       
+                                        <div class="text-center">
+                                            <button type="submit" name="action" value="show" class="btn btn-primary btn-lg" formmethod="POST" >
+                                            Issue
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+</div>
+{% endblock %}
