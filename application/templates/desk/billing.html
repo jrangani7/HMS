@@ -105,7 +105,7 @@
                             <label>{{session['roomcharge']}}</label>
                         </div>
                         {% endfor %}
-                        {% for r in rdata %}
+                        {% if rdata %}
                         <br><br>
                         <center><h2><u>Pharmacy Charges</u></h2></center>
                         <table id="t02">
@@ -118,6 +118,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for r in rdata %}
                                  
                                     <tr>
                                         <td>{{r[0]}}</td>
@@ -125,7 +126,7 @@
                                         <td>{{r[2]}}</td>
                                         <td>{{ r[1] | int() * r[2] | int()}}</td>
                                     </tr>
-                                       
+                                    {% endfor %}    
                             </tbody>
                         </table>
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
@@ -135,8 +136,9 @@
                         
                         
                         
-                        {% endfor %} 
-                        {% for r in ddata %}
+                        
+                        {% endif %}
+                        {% if ddata %}
                         <br><br>
                         <center><h2><u>Diagnostic Charges</u></h2></center>
                         <table id="t03">
@@ -147,12 +149,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                 
+                                {% for r in ddata %}
                                     <tr>
                                         <td>{{r[0]}}</td>
                                         <td>{{r[1]}}</td>
                                     </tr>
-                                       
+                                    {% endfor %}  
                             </tbody>
                         </table>
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
@@ -160,9 +162,9 @@
                             <label>{{session['diagnostictotal']}}</label>
                         </div>
                         
+                        {% endif %}
                         
                         
-                        {% endfor %}
                         {% for row in rudtest %}
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
                             <label>Total Bill:</label>&nbsp;&nbsp;
