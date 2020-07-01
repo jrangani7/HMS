@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Pharmacy - Search Patient Details
+{% endblock %}
+
+{% block content%}
+{% include "pharmacy/includes/pharmacy_navbar.html" %}
+<div class="container-top">
+    <div class="container-fluid">
+        <h2 class="text-center">Medicine Inventory</h2>
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Available Quantity</th>
+                <th scope="col">Rate</th>
+            </thead>
+            <tbody>
+                {% for meddata in meddata %}
+              <tr>
+                
+                <th scope="row">{{meddata[0]}}</th>
+                <td>{{meddata[1]}}</td>
+                <td>{{meddata[2]}}</td>
+                <td>{{meddata[3]}}</td>
+                
+              </tr>
+                {% endfor%}
+            </tbody>
+          </table>
+    </div>
+
+    <div class="container-fluid text-center">
+        <main class="my-form">
+            <div class="cotainer">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <br>
+                            <div class="card">
+                                <div class="card-header text-center"><strong>Issue Medicines</strong></div>
+                                <div class="card-body ">
+                                    {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                    <div class="alert alert-danger text-center">
+                                        <ul class=flashes>
+                                        {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                      </div>
+                                    {% endif %}
+                                    {% endwith %}
+                                    
+                                    <form name="patient display" action="{{url_for('issue_medicines')}}" method="POST">
+                                        <div class="text-center">
+                                            <label for="patid">Medicine ID: </label>
+                                            <div class="text-center">
+                                                {{form.mid}}
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <label for="patid">Quantity: </label>
+                                            <div class="text-center">
+                                                {{form.quantity}}
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <label for="patid">Date of Issue: </label>
+                                            <div class="text-center">
+                                                {{form.dateOfIssue}}
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="text-center">
+                                            <button type="submit" name="action" value="show" class="btn btn-primary btn-lg" formmethod="POST" >
+                                            Issue
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+    </div>
+
+</div>
+{% endblock %}
