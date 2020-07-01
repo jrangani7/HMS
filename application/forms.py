@@ -26,6 +26,12 @@ class PatientRegistrationForm(FlaskForm):
 class DeleteForm(FlaskForm):
     pid=IntegerField('patID')
 
+class SearchForm(FlaskForm):
+    pid=IntegerField('patID')
+
+####################################################################################
+class BillingForm(FlaskForm):
+    pid=IntegerField('patID')
 #####################################################################################
 # Patient Registration Form #
 class UpdatePatientForm(FlaskForm):
