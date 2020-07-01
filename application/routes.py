@@ -1,8 +1,10 @@
 from application import app
 from flask import render_template,request,session ,flash,redirect,url_for
-from application.forms import LoginForm, PatientRegistrationForm,SearchForm, DeleteForm,UpdatePatientForm
+from application.forms import LoginForm, PatientRegistrationForm,SearchForm, IssueMedForm, DeleteForm,UpdatePatientForm
 from application import mysql
 from datetime import timedelta
+from datetime import datetime
+
 app.permanent_session_lifetime = timedelta(minutes=30)
 
 ######################################################################################
@@ -227,12 +229,10 @@ def pharmacy_issue_medicines():
                     cursor1.execute(query1, (form.pid.data,))
                     pdata=cursor1.fetchall()
 
-
                     cursor2=con.cursor()
-                    query2 = "select medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate,medicine_inventory.rate*issued_medicines.quantity_issued from medicine_inventory INNER JOIN issued_medicines ON medicine_inventory.mid = issued_medicines.mid where issued_medicines.pid = %s"
+                    query2 = "select medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate,medicine_inventory.rate*issued_medicines.quantity_issued,issued_medicines.doi from medicine_inventory INNER JOIN issued_medicines ON medicine_inventory.mid = issued_medicines.mid where issued_medicines.pid = %s"
                     cursor2.execute(query2, (form.pid.data,))
                     mdata=cursor2.fetchall()
-
 
                     cursor1.close()
                     cursor2.close()
@@ -244,16 +244,82 @@ def pharmacy_issue_medicines():
                     else:
                         flash("Patient not Found")
                         return render_template("pharmacy/display_patient_medicines.html",form=form)
-                
+             
                 elif request.form['action'] == 'issue':
-
-                    # Medicine Issue Code goes here......
-                    return redirect(url_for("pharmacy_issue_medicines")) 
-            
+                    session["issue_med"] = form.pid.data
+                    return redirect(url_for("pharmacy_issue_medicines_s2"))
+                    
             else:
                 return render_template("pharmacy/display_patient_medicines.html",form=form)
+    
     else:
         return redirect(url_for('login'))
+#################################################################################################
+# Issue medicine Screen 2
+@app.route('/pharmacy/issuemeds2',methods=['GET','POST'])
+def pharmacy_issue_medicines_s2():
+    if 'username' in session and 'PH' in session['username']:
+        form = IssueMedForm(request.form)
+        if request.method == 'POST': 
+            
+            if session['issue_med']:
+                
+                if request.form['action'] == 'check':
+                    con=mysql.connect()
+                        
+                    cursor1=con.cursor()
+                    query1 = "SELECT * FROM medicine_inventory WHERE mname = %s"
+                    cursor1.execute(query1, (form.mname.data,))
+                    mdata=cursor1.fetchall()
+                    cursor1.close()
+                    con.commit()
+                    con.close()
+
+                    if mdata:
+                        if mdata[0][2] >= form.quantity.data:
+                            flash("Medicine Available")
+                            session['mid'] = mdata[0][0]
+                            return render_template("pharmacy/issuemeds2.html",mdata=mdata,form=form)
+                        else:
+                            flash("Insufficient quantity in the inventory. "+str(mdata[0][2])+" available.")
+                            return render_template("pharmacy/issuemeds2.html",form=form)
+                    else:
+                        flash("Medicine unavailable")
+                        return render_template("pharmacy/issuemeds2.html",form=form)
+                else:
+                    con=mysql.connect()
+                    cursor1=con.cursor()
+                    cursor2=con.cursor()
+                    query1 = "UPDATE medicine_inventory set quantity = quantity -"+str(form.quantity.data)+" WHERE mname = %s and quantity >= 0"
+                    qry2 = "insert into issued_medicines values(%s,%s,%s,%s)"
+                    cursor1.execute(query1, (form.mname.data,))
+                    cursor2.execute(qry2, (session['issue_med'],session['mid'],form.quantity.data,datetime.today().strftime('%Y-%m-%d')))
+                    cursor1.close()
+                    cursor2.close()
+                    con.commit()
+                    con.close()
+                    del session['mid']
+                
+                    flash("Medicine Issued")
+                    return render_template("pharmacy/issuemeds2.html",form=form)
+            else:
+                return redirect(url_for("pharmacy_issue_medicines"))
+        else:
+            return render_template("pharmacy/issuemeds2.html",form=form)
+    else:
+        del session['isseu_med']
+        return redirect(url_for('login'))
+
+
+#################################################################################################
+@app.route('/pharmacy/medicine_inventory')
+def medicine_inventory():
+    if 'username' in session and 'PH' in session['username']:
+        curr = mysql.connect().cursor()
+        curr.execute("select * from medicine_inventory")
+        data = curr.fetchall() 
+        return render_template("pharmacy/medicine_inventory.html",data=data)
+    return redirect(url_for('login'))
 
 
 #################################################################################################
@@ -266,6 +332,5 @@ def diagnostic_home():
 
 '''
 query : select medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate,medicine_inventory.rate*issued_medicines.quantity_issued from medicine_inventory INNER JOIN issued_medicines ON medicine_inventory.mid = issued_medicines.mid where issued_medicines.pid = 2
-
 
 '''

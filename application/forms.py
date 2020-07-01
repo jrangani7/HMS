@@ -60,3 +60,6 @@ class UpdatePatientForm(FlaskForm):
 class SearchForm(FlaskForm):
     pid=IntegerField('patID')
 
+class IssueMedForm(FlaskForm):
+    mname=StringField('medID')
+    quantity=IntegerField('quantity')
