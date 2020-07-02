@@ -1,8 +1,9 @@
 from application import app
 from flask import render_template,request,session ,flash,redirect,url_for
-from application.forms import LoginForm, PatientRegistrationForm,SearchForm, DeleteForm,UpdatePatientForm,IssueMedicineForm,IssueDiagnosticForm
+from application.forms import LoginForm, PatientRegistrationForm,SearchForm, DeleteForm,UpdatePatientForm,IssueMedicineForm,IssueDiagnosticForm, BillingForm
 from application import mysql
 from datetime import timedelta
+from datetime import datetime
 app.permanent_session_lifetime = timedelta(minutes=30)
 
 ######################################################################################
@@ -97,7 +98,7 @@ def registerPatient(form):
 
 def desk_patientdel():
     if 'username' in session and 'AD' in session['username']:
-        form=DeleteForm(request.form)
+        form=SearchForm(request.form)
         if request.method=='POST':
             if request.form['action'] == 'show':
                 con=mysql.connect()
@@ -185,6 +186,35 @@ def desk_patient_update():
             return redirect(url_for('diagnostic_home'))
         return redirect(url_for('login'))
 
+#################################################################################################
+#Delete Patient  
+
+@app.route('/desk/patientsearch',methods=['GET','POST'])
+
+def desk_patientsearch():
+    if 'username' in session and 'AD' in session['username']:
+        form=DeleteForm(request.form)
+        if request.method=='POST':
+            if request.form['action'] == 'show':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "SELECT * FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                pdata=cursor.fetchall()
+                cursor.close()
+                con.commit()
+                con.close()
+                if pdata:
+                    return render_template("desk/search.html",rudtest=pdata,form=form)
+                else:
+                    flash("Patient not Found")
+                    return render_template("desk/search.html",rudtest=pdata,form=form)
+
+
+        else:
+            return render_template("desk/search.html",form=form)
+    else:
+        return redirect(url_for('login'))
 
 ################################################################################################
 @app.route('/desk/activepatients')
@@ -206,6 +236,72 @@ def activepatients():
         else:
             return redirect(url_for('login'))
 
+
+################################################################################################
+## Billing
+@app.route('/desk/billing',methods=['GET','POST'])
+
+def billpatient():
+    if 'username' in session and 'AD' in session['username']:
+        form=BillingForm(request.form)
+        if request.method=='POST':
+            if request.form['action'] == 'show':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "SELECT * FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                pdata=cursor.fetchall()
+                q1 = "SELECT doadmission FROM patient WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                doa=cursor.fetchone()
+                doastr=str(doa[4])
+                bedtype= doa[5]
+                date_time_table = (datetime.strptime(doastr, '%Y-%m-%d'))
+                date_now_str = (datetime.today().strftime('%Y-%m-%d'))
+                date_now = (datetime.strptime(date_now_str, '%Y-%m-%d'))
+                delta = date_now - date_time_table
+                if(bedtype == 'Single'):
+                    session['roomcharge']=(delta.days)*8000
+                elif(bedtype == 'Semi'):
+                    session['roomcharge']=(delta.days)*4000
+                else:
+                    session['roomcharge']=(delta.days)*2000
+                session['doa'] =(delta.days)
+                session['dod'] =date_now_str
+
+                q2 = "SELECT medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate FROM medicine_inventory ,issued_medicines WHERE  medicine_inventory.mid =issued_medicines.mid AND issued_medicines.pid= %s "   
+                cursor.execute(q2, (form.pid.data,))
+                rdata=cursor.fetchall()
+                i=0
+                for row in rdata:
+                    i=i+(row[1]*row[2])
+                
+
+                session['pharmtotal'] =i
+
+                q3= "SELECT diagnostic_tests.tname,diagnostic_tests.charge FROM diagnostic_tests,diagnostic_tests_conducted WHERE diagnostic_tests.tid = diagnostic_tests_conducted.tid AND diagnostic_tests_conducted.pid= %s "
+                cursor.execute(q3, (form.pid.data,))
+                ddata=cursor.fetchall()
+                i=0
+                for row in ddata:
+                    i=i+row[1]
+
+                session['diagnostictotal'] =i
+
+                cursor.close()
+                con.commit()
+                con.close()
+                if pdata:
+                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form)
+                else:
+                    flash("Patient not Found")
+                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form)
+
+
+        else:
+            return render_template("desk/billing.html",form=form)
+    else:
+        return redirect(url_for('login'))
 
 #################################################################################################
 
