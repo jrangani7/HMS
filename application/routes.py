@@ -106,10 +106,10 @@ def desk_patientdel():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
+                    return render_template("desk/patient_delete.html",pdata=pdata,form=form,desk_patient_delete_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
+                    return render_template("desk/patient_delete.html",pdata=pdata,form=form,desk_patient_delete_page=True)
             elif request.form['action'] == 'delete':
                 con=mysql.connect()
                 cursor=con.cursor()
@@ -201,10 +201,10 @@ def desk_patientsearch():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
+                    return render_template("desk/search.html",pdata=pdata,form=form,desk_patient_search_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
+                    return render_template("desk/search.html",pdata=pdata,form=form,desk_patient_search_page=True)
 
 
         else:
