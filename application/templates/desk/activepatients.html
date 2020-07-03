@@ -7,40 +7,16 @@
 {% block content%}
   {% include "desk/includes/navbar.html" %}
 {% if data %}
-
-<center><h2><u>Active patients</u></h2></center>
-<style>
-table {
-  width:100%;
-}
-table, th, td {
-  border: 1px solid rgb(92, 90, 90);
-  border-collapse: collapse;
-}
-th, td {
-  padding: 15px;
-  text-align: left;
-}
-#t01 tr:nth-child(even) {
-  background-color: #eee;
-}
-#t01 tr:nth-child(odd) {
- background-color: #fff;
-}
-#t01 th {
-  background-color: grey;
-  color: black;
-}
-</style>
-<table id="t01">
-    <thead>
+<div clas="container">
+<table class="table">
+    <thead class="thead-dark">
         <tr>
-            <th>Patient ID</th>
-            <th>Name</th> 
-            <th>Age</th>
-            <th>Address</th> 
-            <th>DOJ</th>
-            <th>Type of room</th> 
+            <th scope="col">Patient ID</th>
+            <th scope="col">Name</th> 
+            <th scope="col">Age</th>
+            <th scope="col">Address</th> 
+            <th scope="col">DOJ</th>
+            <th scope="col">Type of room</th> 
         </tr>
     </thead>
     <tbody>
@@ -57,9 +33,17 @@ th, td {
     </tbody>
 </table>
 
+</div>
+
 {% else %}
 
-<p> Patient Table is empty... </p>
+<div class="container-fluid">
+
+  <h2> Patient Table is empty... </h2>
+
+</div>
+
+
 
 {% endif %}
 
