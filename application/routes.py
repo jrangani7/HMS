@@ -6,9 +6,9 @@ from datetime import timedelta
 from datetime import datetime
 app.permanent_session_lifetime = timedelta(minutes=30)
 
-######################################################################################
 
 ######################################################################################
+#Route to Login page 
 @app.route('/',methods=['GET','POST'])
 def login():
     if 'username' in session:
@@ -38,6 +38,7 @@ def login():
     return render_template("login.html",form=form)
 
 #################################################################################################
+##Route to Logout page 
 @app.route('/logout')
 def logout():
     if 'username' in session:
@@ -52,6 +53,7 @@ def desk_home():
         return render_template("desk/index.html",desk_home_page=True)
     return redirect(url_for('login'))
 
+#Routinhg for New Patient Registration page 
 @app.route('/desk/patientRegistration',methods=['GET','POST'])
 def desk_patient():
     if 'username' in session and 'AD' in session['username']:
@@ -86,7 +88,7 @@ def registerPatient(form):
         return False #We can add more elaborate exceptions but it doesn't seem like a priority.
 
 #################################################################################################
-#Delete Patient  
+#Routing for Delete Patient page  
 
 @app.route('/desk/patientdelete',methods=['GET','POST'])
 
@@ -125,7 +127,7 @@ def desk_patientdel():
 
 
 #################################################################################################
-#Update Patient  
+#Routing for Update Patient page  
 
 @app.route('/desk/patient_update',methods=['GET','POST'])
 
@@ -181,7 +183,7 @@ def desk_patient_update():
         return redirect(url_for('login'))
 
 #################################################################################################
-#Search Patient  
+#Routing for Search Patient page  
 
 @app.route('/desk/patientsearch',methods=['GET','POST'])
 
@@ -211,6 +213,8 @@ def desk_patientsearch():
         return redirect(url_for('login'))
 
 ################################################################################################
+#Routing for Displaying Active Patients page 
+
 @app.route('/desk/activepatients')
 def activepatients():
     if 'username' in session and 'AD' in session['username']:
@@ -232,7 +236,7 @@ def activepatients():
 
 
 ################################################################################################
-## Billing
+#Routing for Patient Billing
 @app.route('/desk/billing',methods=['GET','POST'])
 
 def billpatient():
