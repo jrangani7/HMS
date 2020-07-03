@@ -80,9 +80,9 @@
                         </table>
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
                             <label><b>No. of days:</b></label>&nbsp;
-                            <label>{{session['doa']}}</label>&nbsp;&nbsp;&nbsp;
-                            <label>Room Bill:</label>&nbsp;
-                            <label>{{session['roomcharge']}}</label>
+                            <label class="alert-info border">{{session['doa']}}</label>&nbsp;&nbsp;&nbsp;
+                            <label><b>Room Bill:</b></label>&nbsp;
+                            <label class="alert-info border">{{session['roomcharge']}}</label>
                         </div>
                         {% endfor %}
                         {% if rdata %}
@@ -113,7 +113,7 @@
                         </table>
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
                             <label><b>Pharmacy Bill:</b></label>&nbsp;
-                            <label>{{session['pharmtotal']}}</label>
+                            <label class="alert-info border">{{session['pharmtotal']}}</label>
                         </div>
                         
                         
@@ -143,7 +143,7 @@
                         </table>
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
                             <label><b>Diagnostic Bill:</b></label>&nbsp;
-                            <label>{{session['diagnostictotal']}}</label>
+                            <label class="alert-info border">{{session['diagnostictotal']}}</label>
                         </div>
                         
                         {% endif %}
@@ -152,7 +152,7 @@
                         {% for row in rudtest %}
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
                             <label><b>Total Bill:</b></label>&nbsp;&nbsp;
-                            <label>{{session['roomcharge']+session['pharmtotal']+session['diagnostictotal']}}</label>
+                            <label class="alert-info border">{{session['roomcharge']+session['pharmtotal']+session['diagnostictotal']}}</label>
                         </div>
 
                         {% endfor %}

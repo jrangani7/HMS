@@ -1,6 +1,8 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,DateField,SelectField,IntegerField
+from wtforms import StringField,PasswordField,SubmitField,SelectField,IntegerField
 from wtforms.validators import DataRequired,NumberRange
+from wtforms.fields.html5 import DateField
+
 
 
 #####################################################################################
@@ -11,40 +13,40 @@ class LoginForm(FlaskForm):
 #####################################################################################
 # Patient Registration Form #
 class PatientRegistrationForm(FlaskForm):
-    pName=StringField('name',validators=[DataRequired()])
-    pAge=IntegerField('age',validators=[DataRequired(),NumberRange(min=1,max=999)])
-    dateOfSubmission=DateField('date',format='%d-%m-%Y')
-    bedType=SelectField('bed',validators=[DataRequired()],choices=['General','Semi Sharing','Single'])
-    address=StringField('address')
-    city=StringField('city')
-    state=StringField('state')
-    uid=IntegerField('aadhar')
-    status=SelectField('status',validators=[DataRequired()],choices=['Active','Discharged'])
+    pName=StringField('name',validators=[DataRequired()],)
+    pAge=IntegerField('age',validators=[DataRequired(),NumberRange(message="Please fill appropriate age !",min=1,max=999)])
+    dateOfSubmission=DateField('date',format='%Y-%m-%d')
+    bedType=SelectField('bed',choices=[('General','General'),('Semi Sharing','Semi Sharing'),('Single','Single')])
+    address=StringField('address',validators=[DataRequired()])
+    city=StringField('city',validators=[DataRequired()])
+    state=StringField('state',validators=[DataRequired()])
+    uid=IntegerField('aadhar',validators=[DataRequired()])
+    status=SelectField('status',choices=[('Active','Active'),('Discharged','Discharged')])
     
   ###################################################################################
 ### Patient Delete Form
 class DeleteForm(FlaskForm):
-    pid=IntegerField('patID')
+    pid=IntegerField('patID',validators=[DataRequired()])
 
 class SearchForm(FlaskForm):
-    pid=IntegerField('patID')
+    pid=IntegerField('patID',validators=[DataRequired()])
 
 ####################################################################################
 class BillingForm(FlaskForm):
-    pid=IntegerField('patID')
+    pid=IntegerField('patID',validators=[DataRequired()])
 #####################################################################################
 # Patient Registration Form #
 class UpdatePatientForm(FlaskForm):
-    pid=IntegerField('patID')
-    pName=StringField('name',validators=[DataRequired()])
-    pAge=IntegerField('age',validators=[DataRequired(),NumberRange(min=1,max=999)])
-    dateOfSubmission=DateField('date',format='%d-%m-%Y')
-    bedType=SelectField('bed',validators=[DataRequired()],choices=['General','Semi Sharing','Single'])
-    address=StringField('address')
-    city=StringField('city')
-    state=StringField('state')
-    uid=IntegerField('aadhar')
-    status=SelectField('status',validators=[DataRequired()],choices=['Active','Discharged'])
+    pid=IntegerField('patID',validators=[DataRequired()])
+    pName=StringField('name',validators=[DataRequired()],)
+    pAge=IntegerField('age',validators=[DataRequired(),NumberRange(message="Please fill appropriate age !",min=1,max=999)])
+    dateOfSubmission=DateField('date',format='%Y-%m-%d')
+    bedType=SelectField('bed',choices=[('General','General'),('Semi Sharing','Semi Sharing'),('Single','Single')])
+    address=StringField('address',validators=[DataRequired()])
+    city=StringField('city',validators=[DataRequired()])
+    state=StringField('state',validators=[DataRequired()])
+    uid=IntegerField('aadhar',validators=[DataRequired()])
+    status=SelectField('status',choices=[('Active','Active'),('Discharged','Discharged')])
 
     def set_data(self,pdata):   
       """
@@ -64,15 +66,15 @@ class UpdatePatientForm(FlaskForm):
 #######################################################################################################
 # patient search form
 class SearchForm(FlaskForm):
-    pid=IntegerField('patID')
+    pid=IntegerField('patID',validators=[DataRequired()])
 
 ######################################################################################################
 class IssueMedicineForm(FlaskForm):
-    mid=IntegerField('med_id')
-    quantity=IntegerField('quantity')
-    dateOfIssue=DateField('doi',format='%d-%m-%Y')
+    mid=IntegerField('med_id',validators=[DataRequired()])
+    quantity=IntegerField('quantity',validators=[DataRequired()])
+    dateOfIssue=DateField('doi',format='%d-%m-%Y',validators=[DataRequired()])
 
 
 class IssueDiagnosticForm(FlaskForm):
-    tid=IntegerField('test_id')
+    tid=IntegerField('test_id',validators=[DataRequired()])
 

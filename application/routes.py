@@ -57,13 +57,18 @@ def desk_patient():
     if 'username' in session and 'AD' in session['username']:
         form=PatientRegistrationForm(request.form)
         if request.method=='POST':
-            status=registerPatient(form)
-            if status:
-                flash("Registration Sucessfull !!")
-                return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
+            if form.validate():
+                status=registerPatient(form)
+                if status:
+                    flash("Registration Sucessful !!")
+                    return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
+                else:
+                    flash("Registration Not Successful ! Please check data and try again !")
+                    return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
             else:
-                flash("Registration Not Successfull ! Please check data and try again !")
-                return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
+                err=list(form.errors.values())
+                flash(str(err[0][0]))
+                return render_template("desk/patient_registration.html",form=form)
         else:
             return render_template("desk/patient_registration.html",form=form)
     else:
@@ -166,7 +171,6 @@ def desk_patient_update():
                 del session['pid']
                 return render_template("desk/patient_update.html",form=form,update=False)
         else:
-            
             return render_template("desk/patient_update.html",form=form,update=False)
     else:
         if 'username' in session:
