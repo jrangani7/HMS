@@ -8,19 +8,8 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 
 ######################################################################################
 
-@app.route('/')
-def index():
-    if 'username' in session:
-        username=session['username']
-        if 'AD' in username:
-            return redirect(url_for('desk_home'))
-        elif 'PH' in username:
-            return redirect(url_for('pharmacy_home'))
-        return redirect(url_for('diagnostic_home')) 
-    return render_template("index.html")
-
 ######################################################################################
-@app.route('/login',methods=['GET','POST'])
+@app.route('/',methods=['GET','POST'])
 def login():
     if 'username' in session:
         username=session['username']
