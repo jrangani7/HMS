@@ -5,9 +5,7 @@ from application import mysql
 from datetime import timedelta
 from datetime import datetime
 app.permanent_session_lifetime = timedelta(minutes=30)
-
-<<<<<<< HEAD
-######################################################################################
+###########################################################################
 def password_validation(password):
     if len(password) < 10:
         return True 
@@ -27,9 +25,7 @@ def password_validation(password):
     else:
         return True
     return False
-=======
 
->>>>>>> 3ff924fd689808260d9af0d95d1e3c692259aa30
 ######################################################################################
 #Route to Login page 
 @app.route('/',methods=['GET','POST'])
