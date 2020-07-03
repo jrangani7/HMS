@@ -6,6 +6,7 @@ from datetime import timedelta
 from datetime import datetime
 app.permanent_session_lifetime = timedelta(minutes=30)
 
+<<<<<<< HEAD
 ######################################################################################
 def password_validation(password):
     if len(password) < 10:
@@ -26,7 +27,11 @@ def password_validation(password):
     else:
         return True
     return False
+=======
+
+>>>>>>> 3ff924fd689808260d9af0d95d1e3c692259aa30
 ######################################################################################
+#Route to Login page 
 @app.route('/',methods=['GET','POST'])
 def login():
     form=LoginForm()
@@ -64,6 +69,7 @@ def login():
     return render_template("login.html",form=form)
 
 #################################################################################################
+##Route to Logout page 
 @app.route('/logout')
 def logout():
     if 'username' in session:
@@ -78,6 +84,7 @@ def desk_home():
         return render_template("desk/index.html",desk_home_page=True)
     return redirect(url_for('login'))
 
+#Routinhg for New Patient Registration page 
 @app.route('/desk/patientRegistration',methods=['GET','POST'])
 def desk_patient():
     if 'username' in session and 'AD' in session['username']:
@@ -93,7 +100,7 @@ def desk_patient():
                     return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
             else:
                 err=list(form.errors.values())
-                flash(str(err[0][0]))
+                flash(str(err[0][0])) #first error is flashed in case of multiple errors
                 return render_template("desk/patient_registration.html",form=form)
         else:
             return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
@@ -112,7 +119,7 @@ def registerPatient(form):
         return False #We can add more elaborate exceptions but it doesn't seem like a priority.
 
 #################################################################################################
-#Delete Patient  
+#Routing for Delete Patient page  
 
 @app.route('/desk/patientdelete',methods=['GET','POST'])
 
@@ -130,10 +137,10 @@ def desk_patientdel():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
+                    return render_template("desk/patient_delete.html",pdata=pdata,form=form,desk_patient_delete_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
+                    return render_template("desk/patient_delete.html",pdata=pdata,form=form,desk_patient_delete_page=True)
             elif request.form['action'] == 'delete':
                 con=mysql.connect()
                 cursor=con.cursor()
@@ -151,7 +158,7 @@ def desk_patientdel():
 
 
 #################################################################################################
-#Update Patient  
+#Routing for Update Patient page  
 
 @app.route('/desk/patient_update',methods=['GET','POST'])
 
@@ -207,7 +214,7 @@ def desk_patient_update():
         return redirect(url_for('login'))
 
 #################################################################################################
-#Search Patient  
+#Routing for Search Patient page  
 
 @app.route('/desk/patientsearch',methods=['GET','POST'])
 
@@ -225,10 +232,10 @@ def desk_patientsearch():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
+                    return render_template("desk/search.html",pdata=pdata,form=form,desk_patient_search_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
+                    return render_template("desk/search.html",pdata=pdata,form=form,desk_patient_search_page=True)
 
 
         else:
@@ -237,6 +244,8 @@ def desk_patientsearch():
         return redirect(url_for('login'))
 
 ################################################################################################
+#Routing for Displaying Active Patients page 
+
 @app.route('/desk/activepatients')
 def activepatients():
     if 'username' in session and 'AD' in session['username']:
@@ -258,7 +267,7 @@ def activepatients():
 
 
 ################################################################################################
-## Billing
+#Routing for Patient Billing
 @app.route('/desk/billing',methods=['GET','POST'])
 
 def billpatient():
@@ -313,10 +322,10 @@ def billpatient():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
+                    return render_template("desk/billing.html",pdata=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
+                    return render_template("desk/billing.html",pdata=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
             
             elif request.form['action'] == 'update':
                 con=mysql.connect()
@@ -456,7 +465,7 @@ def issue(issueid,quantity,doi):
     try:
         con=mysql.connect()
         cursor=con.cursor()
-        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s,%s)",(session['pid'],issueid,quantity,doi))
+        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s)",(session['pid'],issueid,quantity))
         con.commit()
         cursor.close()
         con.close()

@@ -47,7 +47,7 @@
                         </div>
                         
                     </div>
-                    {% if rudtest %}
+                    {% if pdata %}
                     
                         <div class="container-fluid text-center">
                             <h2>Patient Details</h2>
@@ -66,7 +66,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for row in rudtest %}
+                                {% for row in pdata %}
                                     <tr>
                                         <td>{{row[1]}}</td>
                                         <td>{{row[2]}}</td>
@@ -151,7 +151,7 @@
                         
                         
                         
-                        {% for row in rudtest %}
+                        {% for row in pdata %}
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
                             <label><b>Total Bill:</b></label>&nbsp;&nbsp;
                             <label class="alert-info border">{{session['roomcharge']+session['pharmtotal']+session['diagnostictotal']}}</label>
