@@ -49,7 +49,7 @@ def logout():
 @app.route('/desk')
 def desk_home():
     if 'username' in session and 'AD' in session['username']:
-        return render_template("desk/index.html")
+        return render_template("desk/index.html",desk_home_page=True)
     return redirect(url_for('login'))
 
 @app.route('/desk/patientRegistration',methods=['GET','POST'])
@@ -70,7 +70,7 @@ def desk_patient():
                 flash(str(err[0][0]))
                 return render_template("desk/patient_registration.html",form=form)
         else:
-            return render_template("desk/patient_registration.html",form=form)
+            return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
     else:
         return redirect(url_for('login'))
 
@@ -104,10 +104,10 @@ def desk_patientdel():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form)
+                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form)
+                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
             elif request.form['action'] == 'delete':
                 con=mysql.connect()
                 cursor=con.cursor()
@@ -116,10 +116,10 @@ def desk_patientdel():
                 cursor.close()
                 con.commit()
                 con.close()
-                return render_template("desk/patient_delete.html",form=form)
+                return render_template("desk/patient_delete.html",form=form,desk_patient_delete_page=True)
 
         else:
-            return render_template("desk/patient_delete.html",form=form)
+            return render_template("desk/patient_delete.html",form=form,desk_patient_delete_page=True)
     else:
         return redirect(url_for('login'))
 
@@ -148,10 +148,10 @@ def desk_patient_update():
                 if pdata:
                     form.set_data(pdata[0])
                     session["pid"]=form.pid.data
-                    return render_template("desk/patient_update.html",pid=form.pid.data,form=form,update=True)
+                    return render_template("desk/patient_update.html",pid=form.pid.data,form=form,update=True,desk_patient_update_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/patient_update.html",form=form,update=False)
+                    return render_template("desk/patient_update.html",form=form,update=False,desk_patient_update_page=True)
             elif request.form['action'] == 'update':
                 con=mysql.connect()
                 cursor=con.cursor()
@@ -165,13 +165,14 @@ def desk_patient_update():
                 con.close()
                 del session['pid']
                 flash('Patient Details Updated.')
-                return render_template("desk/patient_update.html",form=form,Update=False)
+                return render_template("desk/patient_update.html",form=form,Update=False,desk_patient_update_page=True)
             else:
                 #discard
                 del session['pid']
-                return render_template("desk/patient_update.html",form=form,update=False)
+                return render_template("desk/patient_update.html",form=form,update=False,desk_patient_update_page=True)
         else:
-            return render_template("desk/patient_update.html",form=form,update=False)
+            
+            return render_template("desk/patient_update.html",form=form,update=False,desk_patient_update_page=True)
     else:
         if 'username' in session:
             if 'PH' in session['username']:
@@ -180,7 +181,7 @@ def desk_patient_update():
         return redirect(url_for('login'))
 
 #################################################################################################
-#Delete Patient  
+#Search Patient  
 
 @app.route('/desk/patientsearch',methods=['GET','POST'])
 
@@ -198,14 +199,14 @@ def desk_patientsearch():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/search.html",rudtest=pdata,form=form)
+                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/search.html",rudtest=pdata,form=form)
+                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
 
 
         else:
-            return render_template("desk/search.html",form=form)
+            return render_template("desk/search.html",form=form,desk_patient_search_page=True)
     else:
         return redirect(url_for('login'))
 
@@ -217,9 +218,9 @@ def activepatients():
         curr.execute("select * from patient where status='Active'")
         data = curr.fetchall()
         if curr.rowcount > 0:
-            return render_template("desk/activepatients.html",data=data)
+            return render_template("desk/activepatients.html",data=data,desk_patient_active_page=True)
         else:
-            return render_template("desk/activepatients.html")
+            return render_template("desk/activepatients.html",desk_patient_active_page=True)
 
     else:
         if 'username' in session:
@@ -247,20 +248,21 @@ def billpatient():
                 q1 = "SELECT doadmission FROM patient WHERE id = %s "
                 cursor.execute(query, (form.pid.data,))
                 doa=cursor.fetchone()
-                doastr=str(doa[4])
-                bedtype= doa[5]
-                date_time_table = (datetime.strptime(doastr, '%Y-%m-%d'))
-                date_now_str = (datetime.today().strftime('%Y-%m-%d'))
-                date_now = (datetime.strptime(date_now_str, '%Y-%m-%d'))
-                delta = date_now - date_time_table
-                if(bedtype == 'Single'):
-                    session['roomcharge']=(delta.days)*8000
-                elif(bedtype == 'Semi'):
-                    session['roomcharge']=(delta.days)*4000
-                else:
-                    session['roomcharge']=(delta.days)*2000
-                session['doa'] =(delta.days)
-                session['dod'] =date_now_str
+                if doa:
+                    doastr=str(doa[4])
+                    bedtype= doa[5]
+                    date_time_table = (datetime.strptime(doastr, '%Y-%m-%d'))
+                    date_now_str = (datetime.today().strftime('%Y-%m-%d'))
+                    date_now = (datetime.strptime(date_now_str, '%Y-%m-%d'))
+                    delta = date_now - date_time_table
+                    if(bedtype == 'Single'):
+                        session['roomcharge']=(delta.days)*8000
+                    elif(bedtype == 'Semi'):
+                        session['roomcharge']=(delta.days)*4000
+                    else:
+                        session['roomcharge']=(delta.days)*2000
+                    session['doa'] =(delta.days)
+                    session['dod'] =date_now_str
 
                 q2 = "SELECT medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate FROM medicine_inventory ,issued_medicines WHERE  medicine_inventory.mid =issued_medicines.mid AND issued_medicines.pid= %s "   
                 cursor.execute(q2, (form.pid.data,))
@@ -285,14 +287,14 @@ def billpatient():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form)
+                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form)
+                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
 
 
         else:
-            return render_template("desk/billing.html",form=form)
+            return render_template("desk/billing.html",form=form,desk_patient_billing_page=True)
     else:
         return redirect(url_for('login'))
 

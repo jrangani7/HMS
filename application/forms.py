@@ -72,7 +72,7 @@ class SearchForm(FlaskForm):
 class IssueMedicineForm(FlaskForm):
     mid=IntegerField('med_id',validators=[DataRequired()])
     quantity=IntegerField('quantity',validators=[DataRequired()])
-    dateOfIssue=DateField('doi',format='%d-%m-%Y',validators=[DataRequired()])
+    dateOfIssue=DateField('doi',format='%Y-%m-%d',validators=[DataRequired()])
 
 
 class IssueDiagnosticForm(FlaskForm):
