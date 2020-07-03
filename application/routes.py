@@ -267,7 +267,7 @@ def billpatient():
                         session['roomcharge']=(delta.days)*4000
                     else:
                         session['roomcharge']=(delta.days)*2000
-                    session['doa'] =(delta.days)
+                    session['doa'] =abs(delta.days)
                     session['dod'] =date_now_str
 
                 q2 = "SELECT medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate FROM medicine_inventory ,issued_medicines WHERE  medicine_inventory.mid =issued_medicines.mid AND issued_medicines.pid= %s "   
