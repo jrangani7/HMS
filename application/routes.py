@@ -7,10 +7,29 @@ from datetime import datetime
 app.permanent_session_lifetime = timedelta(minutes=30)
 
 ######################################################################################
-
+def password_validation(password):
+    if len(password) < 10:
+        return True 
+    for r in password:
+        if r.isupper():
+            break
+    else:
+        return True
+    for r in password:
+        if r.isdigit():
+            break
+    else:
+        return True
+    for r in password:
+        if not r.isalnum():
+            break
+    else:
+        return True
+    return False
 ######################################################################################
 @app.route('/',methods=['GET','POST'])
 def login():
+    form=LoginForm()
     if 'username' in session:
         username=session['username']
         if 'AD' in username:
@@ -21,7 +40,14 @@ def login():
     if request.method == 'POST':
         username=request.form["username"]
         password=request.form["password"]
-        
+
+        #validate username and Password 
+        if len(username) < 8 :
+            flash('username must be alphabetic or alphanumeric and should have a minimum of 8 characters.')
+            return render_template("login.html",form=form)
+        if password_validation(password):
+            flash('Password should contain 10 characters including one special character, one upper case, one numeric')
+            return render_template("login.html",form=form)
         n= mysql.connect().cursor().execute("SELECT * from userstore where loginid =%s and password=%s",(username,password))
         if n :
             session["username"] = username
@@ -34,7 +60,7 @@ def login():
         else:
             flash(' Invalid Credentials.')
             return redirect(url_for('login'))
-    form=LoginForm()
+    
     return render_template("login.html",form=form)
 
 #################################################################################################
