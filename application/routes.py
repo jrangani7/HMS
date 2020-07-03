@@ -291,10 +291,10 @@ def billpatient():
                 con.commit()
                 con.close()
                 if pdata:
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
+                    return render_template("desk/billing.html",pdata=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
                 else:
                     flash("Patient not Found")
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
+                    return render_template("desk/billing.html",pdata=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
             
             elif request.form['action'] == 'update':
                 con=mysql.connect()
