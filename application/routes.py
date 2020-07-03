@@ -27,12 +27,7 @@ def password_validation(password):
     return False
 
 ######################################################################################
-<<<<<<< HEAD
 #Route to Login page 
-=======
-
-######################################################################################
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
 @app.route('/',methods=['GET','POST'])
 def login():
     form=LoginForm()
@@ -82,11 +77,7 @@ def logout():
 @app.route('/desk')
 def desk_home():
     if 'username' in session and 'AD' in session['username']:
-<<<<<<< HEAD
-        return render_template("desk/index.html",desk_home_page=True)
-=======
         return redirect(url_for('activepatients'))
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
     return redirect(url_for('login'))
 
 #Routinhg for New Patient Registration page 
@@ -102,11 +93,11 @@ def desk_patient():
                     return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
                 else:
                     flash("Registration Not Successful ! Please check data and try again !")
-                    return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
+                    return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True) #form is preserved to allow user to make changes
             else:
                 err=list(form.errors.values())
                 flash(str(err[0][0])) #first error is flashed in case of multiple errors
-                return render_template("desk/patient_registration.html",form=form)
+                return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
         else:
             return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
     else:
@@ -142,17 +133,10 @@ def desk_patientdel():
                 con.commit()
                 con.close()
                 if pdata:
-<<<<<<< HEAD
                     return render_template("desk/patient_delete.html",pdata=pdata,form=form,desk_patient_delete_page=True)
                 else:
                     flash("Patient not Found")
                     return render_template("desk/patient_delete.html",pdata=pdata,form=form,desk_patient_delete_page=True)
-=======
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
-                else:
-                    flash("Patient not Found")
-                    return render_template("desk/patient_delete.html",rudtest=pdata,form=form,desk_patient_delete_page=True)
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
             elif request.form['action'] == 'delete':
                 con=mysql.connect()
                 cursor=con.cursor()
@@ -226,11 +210,7 @@ def desk_patient_update():
         return redirect(url_for('login'))
 
 #################################################################################################
-<<<<<<< HEAD
 #Routing for Search Patient page  
-=======
-#Search Patient  
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
 
 @app.route('/desk/patientsearch',methods=['GET','POST'])
 
@@ -248,17 +228,10 @@ def desk_patientsearch():
                 con.commit()
                 con.close()
                 if pdata:
-<<<<<<< HEAD
                     return render_template("desk/search.html",pdata=pdata,form=form,desk_patient_search_page=True)
                 else:
                     flash("Patient not Found")
                     return render_template("desk/search.html",pdata=pdata,form=form,desk_patient_search_page=True)
-=======
-                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
-                else:
-                    flash("Patient not Found")
-                    return render_template("desk/search.html",rudtest=pdata,form=form,desk_patient_search_page=True)
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
 
 
         else:
@@ -290,11 +263,7 @@ def activepatients():
 
 
 ################################################################################################
-<<<<<<< HEAD
 #Routing for Patient Billing
-=======
-## Billing
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
 @app.route('/desk/billing',methods=['GET','POST'])
 
 def billpatient():
@@ -349,17 +318,10 @@ def billpatient():
                 con.commit()
                 con.close()
                 if pdata:
-<<<<<<< HEAD
                     return render_template("desk/billing.html",pdata=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
                 else:
                     flash("Patient not Found")
                     return render_template("desk/billing.html",pdata=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
-=======
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
-                else:
-                    flash("Patient not Found")
-                    return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
             
             elif request.form['action'] == 'update':
                 con=mysql.connect()
@@ -424,54 +386,6 @@ def search_patients():
             
             else:
                 return render_template("pharmacy/search_patient.html",form=form)
-<<<<<<< HEAD
-=======
-    else:
-        return redirect(url_for('login'))
-
-
-@app.route('/pharmacy/display_details',methods=['GET','POST'])
-def display_patient_details():
-    if 'username' in session and 'PH' in session['username']:
-       return render_template('pharmacy/display_patient_details.html',pdata=session['pdata'],mdata=session['mdata'])
-    else:
-        return redirect(url_for('login'))
-
-
-
-@app.route('/pharmacy/issue_medicines',methods=['GET','POST'])
-def issue_medicines():
-    meddata=get_med_inventory()
-    if 'username' in session and 'PH' in session['username']:
-        form=IssueMedicineForm(request.form)
-        if request.method=="POST":
-            issueid=form.mid.data
-            quantity=form.quantity.data
-            doi=form.dateOfIssue.data
-            if meddata:
-                med=get_medicine(issueid)
-                if issueid==med[0][0]:
-                    if quantity<=med[0][2]:
-                        status=issue(issueid,quantity,doi)
-                        meddata=update_inventory(quantity,issueid)
-                        if status:
-                            flash("Medicines Issued and Database Updated !")
-                            return redirect(url_for('issue_medicines')) #clear form previous input if succesfull
-                        else:
-                            flash("Something Went Wrong !")
-                            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
-                    else:
-                        flash("Medicine not available in that quantity !")
-                        return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
-                else:
-                    flash("Medicine not in Database !")
-                    return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
-            else:
-                flash("Out of Medicines !")
-                return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
-        else:
-            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
     else:
         return redirect(url_for('login'))
 
@@ -634,8 +548,6 @@ def diagnostic_home():
     return redirect(url_for('login'))
 
 
-<<<<<<< HEAD
-=======
 
 @app.route('/diagnostic/search_diagnostics',methods=['GET','POST'])
 def search_diagnostics():
@@ -658,34 +570,8 @@ def search_diagnostics():
                     session['pdata']=pdata
                     session['ddata']=ddata
                     session['pid']=form.pid.data
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
-
-@app.route('/diagnostic/search_diagnostics',methods=['GET','POST'])
-def search_diagnostics():
-    if 'username' in session and 'DS' in session['username']:
-            form = SearchForm(request.form)
-            if request.method == 'POST':
-                    con=mysql.connect()
-                    
-                    cursor1=con.cursor()
-                    query1 = "SELECT * FROM patient WHERE id = %s "
-                    cursor1.execute(query1, (form.pid.data))
-                    pdata=cursor1.fetchall()
 
 
-                    cursor2=con.cursor()
-                    query2 = "select diagnostic_tests.tid,diagnostic_tests.tname,diagnostic_tests.charge FROM diagnostic_tests INNER JOIN diagnostic_tests_conducted ON diagnostic_tests.tid = diagnostic_tests_conducted.tid where diagnostic_tests_conducted.pid = %s"
-                    cursor2.execute(query2, (form.pid.data))
-                    ddata=cursor2.fetchall()
-
-<<<<<<< HEAD
-                    session['pdata']=pdata
-                    session['ddata']=ddata
-                    session['pid']=form.pid.data
-
-
-=======
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
                     cursor1.close()
                     cursor2.close()
                     con.commit()
@@ -777,8 +663,4 @@ def available_tests():
         con.close()
         return data
     
-<<<<<<< HEAD
 ##################################################################################################
-=======
-##################################################################################################
->>>>>>> d0990d549b7b3a5b745805616acedd9cc3ca03ad
