@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField,PasswordField,SubmitField,DateField,SelectField,IntegerField
+from wtforms import StringField,PasswordField,SubmitField,SelectField,IntegerField
+from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired,NumberRange
 
 
@@ -13,7 +14,7 @@ class LoginForm(FlaskForm):
 class PatientRegistrationForm(FlaskForm):
     pName=StringField('name',validators=[DataRequired()])
     pAge=IntegerField('age',validators=[DataRequired(),NumberRange(min=1,max=999)])
-    dateOfSubmission=DateField('date',format='%d-%m-%Y')
+    dateOfSubmission=DateField('date',format='%Y-%m-%d')
     bedType=SelectField('bed',validators=[DataRequired()],choices=['General','Semi Sharing','Single'])
     address=StringField('address')
     city=StringField('city')
@@ -38,7 +39,7 @@ class UpdatePatientForm(FlaskForm):
     pid=IntegerField('patID')
     pName=StringField('name',validators=[DataRequired()])
     pAge=IntegerField('age',validators=[DataRequired(),NumberRange(min=1,max=999)])
-    dateOfSubmission=DateField('date',format='%d-%m-%Y')
+    dateOfSubmission=DateField('date',format='%Y-%m-%d')
     bedType=SelectField('bed',validators=[DataRequired()],choices=['General','Semi Sharing','Single'])
     address=StringField('address')
     city=StringField('city')
@@ -70,7 +71,7 @@ class SearchForm(FlaskForm):
 class IssueMedicineForm(FlaskForm):
     mid=IntegerField('med_id')
     quantity=IntegerField('quantity')
-    dateOfIssue=DateField('doi',format='%d-%m-%Y')
+    dateOfIssue=DateField('doi',format='%Y-%m-%d')
 
 
 class IssueDiagnosticForm(FlaskForm):

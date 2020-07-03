@@ -6,29 +6,6 @@
 
 {% block content%}
 {% include "desk/includes/navbar.html" %}
-<style>
-    table {
-      width:100%;
-    }
-    table, th, td {
-      border: 1px solid rgb(92, 90, 90);
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 15px;
-      text-align: left;
-    }
-    #t01 tr:nth-child(even) {
-      background-color: #eee;
-    }
-    #t01 tr:nth-child(odd) {
-     background-color: #fff;
-    }
-    #t01 th {
-      background-color: grey;
-      color: black;
-    }
-</style>
 <main class="my-form">
     <div class="cotainer">
         <div class="row justify-content-center">
@@ -70,22 +47,26 @@
                         </div>
                         
                     </div>
-                    {% for row in rudtest %}
-                        <center><h2><u>Patient Details</u></h2></center>
-                        <table id="t01">
-                            <thead>
+                    {% if rudtest %}
+                    
+                        <div class="container-fluid text-center">
+                            <h2>Patient Details</h2>
+                        </div>
+                       
+                        <table class="table">
+                            <thead class="thead-dark">
                                 <tr>
-                                    <th>Patient ID</th>
-                                    <th>Name</th> 
-                                    <th>Age</th>
-                                    <th>Address</th> 
-                                    <th>DOJ</th>
-                                    <th>DOD</th>
-                                    <th>Type of room</th> 
+                                    <th scope="col">Patient ID</th>
+                                    <th scope="col">Name</th> 
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Address</th> 
+                                    <th scope="col">DOJ</th>
+                                    <th scope="col">DOD</th>
+                                    <th scope="col">Type of room</th> 
                                 </tr>
                             </thead>
                             <tbody>
-                                 
+                                {% for row in rudtest %}
                                     <tr>
                                         <td>{{row[1]}}</td>
                                         <td>{{row[2]}}</td>
@@ -95,29 +76,33 @@
                                         <td>{{session['dod']}}</td>
                                         <td>{{row[5]}}</td>
                                     </tr>
-                                       
+                                    {% endfor %}
                             </tbody>
                         </table>
-                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
-                            <label>No. of days:</label>&nbsp;
+                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
+                            <label><b>No. of days:</b></label>&nbsp;
                             <label>{{session['doa']}}</label>&nbsp;&nbsp;&nbsp;
                             <label>Room Bill:</label>&nbsp;
                             <label>{{session['roomcharge']}}</label>
                         </div>
-                        {% endfor %}
-                        {% for r in rdata %}
+                        
+                        {% endif %}
+                        {% if rdata %}
                         <br><br>
-                        <center><h2><u>Pharmacy Charges</u></h2></center>
-                        <table id="t02">
-                            <thead>
+                        <div class="container-fluid text-center">
+                            <h2>Pharmacy Charges</h2>
+                        </div>
+                        <table class="table">
+                            <thead class="thead-dark">
                                 <tr>
-                                    <th>Medicine</th>
-                                    <th>Quantity</th> 
-                                    <th>Rate</th>
-                                    <th>Amount</th>  
+                                    <th scope="col">Medicine</th>
+                                    <th scope="col">Quantity</th> 
+                                    <th scope="col">Rate</th>
+                                    <th scope="col">Amount</th>  
                                 </tr>
                             </thead>
                             <tbody>
+                                {% for r in rdata %}
                                  
                                     <tr>
                                         <td>{{r[0]}}</td>
@@ -125,47 +110,50 @@
                                         <td>{{r[2]}}</td>
                                         <td>{{ r[1] | int() * r[2] | int()}}</td>
                                     </tr>
-                                       
+                                    {% endfor %}    
                             </tbody>
                         </table>
-                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
-                            <label>Pharmacy Bill:</label>&nbsp;
+                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
+                            <label><b>Pharmacy Bill:</b></label>&nbsp;
                             <label>{{session['pharmtotal']}}</label>
                         </div>
                         
                         
                         
-                        {% endfor %} 
-                        {% for r in ddata %}
+                        
+                        {% endif %}
+                        {% if ddata %}
                         <br><br>
-                        <center><h2><u>Diagnostic Charges</u></h2></center>
-                        <table id="t03">
-                            <thead>
+                        <div class="container-fluid text-center">
+                            <h2>Diagnostic Charges</h2>
+                        </div>
+                        <table class="table">
+                            <thead class="thead-dark">
                                 <tr>
-                                    <th>Test</th>
-                                    <th>Amount</th>  
+                                    <th scope="col">Test</th>
+                                    <th scope="col">Amount</th>  
                                 </tr>
                             </thead>
                             <tbody>
-                                 
+                                {% for r in ddata %}
                                     <tr>
                                         <td>{{r[0]}}</td>
                                         <td>{{r[1]}}</td>
                                     </tr>
-                                       
+                                    {% endfor %}  
                             </tbody>
                         </table>
-                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
-                            <label>Diagnostic Bill:</label>&nbsp;
+                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
+                            <label><b>Diagnostic Bill:</b></label>&nbsp;
                             <label>{{session['diagnostictotal']}}</label>
                         </div>
                         
+                        {% endif %}
                         
                         
-                        {% endfor %}
                         {% for row in rudtest %}
-                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
-                            <label>Total Bill:</label>&nbsp;&nbsp;
+                        <div style="display:flex; flex-direction: row; justify-content: center; align-items: center border">
+                            <label><b>Total Bill:</b></label>&nbsp;&nbsp;
                             <label>{{session['roomcharge']+session['pharmtotal']+session['diagnostictotal']}}</label>
                         </div>
 
