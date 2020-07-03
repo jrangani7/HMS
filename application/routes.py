@@ -8,19 +8,8 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 
 ######################################################################################
 
-@app.route('/')
-def index():
-    if 'username' in session:
-        username=session['username']
-        if 'AD' in username:
-            return redirect(url_for('desk_home'))
-        elif 'PH' in username:
-            return redirect(url_for('pharmacy_home'))
-        return redirect(url_for('diagnostic_home')) 
-    return render_template("index.html")
-
 ######################################################################################
-@app.route('/login',methods=['GET','POST'])
+@app.route('/',methods=['GET','POST'])
 def login():
     if 'username' in session:
         username=session['username']
@@ -68,13 +57,18 @@ def desk_patient():
     if 'username' in session and 'AD' in session['username']:
         form=PatientRegistrationForm(request.form)
         if request.method=='POST':
-            status=registerPatient(form)
-            if status:
-                flash("Registration Sucessfull !!")
-                return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
+            if form.validate():
+                status=registerPatient(form)
+                if status:
+                    flash("Registration Sucessful !!")
+                    return redirect(url_for("desk_patient")) # redirect clears the form when registration is succesfull
+                else:
+                    flash("Registration Not Successful ! Please check data and try again !")
+                    return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
             else:
-                flash("Registration Not Successfull ! Please check data and try again !")
-                return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True) #form is preserved to allow user to make changes
+                err=list(form.errors.values())
+                flash(str(err[0][0]))
+                return render_template("desk/patient_registration.html",form=form)
         else:
             return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
     else:
@@ -311,7 +305,7 @@ def billpatient():
 @app.route('/pharmacy')
 def pharmacy_home():
     if 'username' in session and 'PH' in session['username']:
-        return render_template("pharmacy/index.html")
+        return redirect(url_for("search_patients"))
     return redirect(url_for('login'))
 
 @app.route('/pharmacy/search_medicines',methods=['GET','POST'])
@@ -380,7 +374,7 @@ def issue_medicines():
                         meddata=update_inventory(quantity,issueid)
                         if status:
                             flash("Medicines Issued and Database Updated !")
-                            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+                            return redirect(url_for('issue_medicines')) #clear form previous input if succesfull
                         else:
                             flash("Something Went Wrong !")
                             return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)

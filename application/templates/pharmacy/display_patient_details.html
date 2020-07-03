@@ -42,7 +42,7 @@
           </table>
     </div>
     <br>
-    <div class="container-fluid">
+    <div class="container-fluid overflow-auto">
         {%if mdata %}
             <h2 class="text-center">Issued Medicines</h2>
             <table class="table">
@@ -71,7 +71,7 @@
         {% endif %}
     </div>
 
-    <div class="container-fluid text-center">
+    <div class="container-fluid text-center overflow-auto">
 
       <a class="btn btn-primary" href="{{url_for('issue_medicines')}}" role="button">Issue Medicines</a>
       <br>
