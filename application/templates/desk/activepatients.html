@@ -7,7 +7,7 @@
 {% block content%}
   {% include "desk/includes/navbar.html" %}
 {% if data %}
-<div clas="container">
+<div class="container">
 <table class="table">
     <thead class="thead-dark">
         <tr>
@@ -33,7 +33,17 @@
     </tbody>
 </table>
 
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css')}}"/>
+<script src="{{ url_for('static',filename='tables/js/jquery.js')}}"></script>
+<script src="{{ url_for('static',filename='tables/js/jquery.dataTables.js')}}"></script>
+<script src="{{ url_for('static',filename='tables/js/dataTables.bootstrap.js')}}"></script>
+
 </div>
+<script>
+    $(".table").DataTable();
+</script>
+
 
 {% else %}
 

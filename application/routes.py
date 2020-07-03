@@ -49,7 +49,7 @@ def logout():
 @app.route('/desk')
 def desk_home():
     if 'username' in session and 'AD' in session['username']:
-        return redirect(url_for("activepatients"))
+        return redirect(url_for('activepatients'))
     return redirect(url_for('login'))
 
 @app.route('/desk/patientRegistration',methods=['GET','POST'])
@@ -67,7 +67,7 @@ def desk_patient():
                     return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
             else:
                 err=list(form.errors.values())
-                flash(str(err[0][0]))
+                flash(str(err[0][0])) #first error is flashed in case of multiple errors
                 return render_template("desk/patient_registration.html",form=form)
         else:
             return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
@@ -242,7 +242,7 @@ def billpatient():
             if request.form['action'] == 'show':
                 con=mysql.connect()
                 cursor=con.cursor()
-                query = "SELECT * FROM patient WHERE id = %s "
+                query = "SELECT * FROM patient WHERE id = %s AND status='Active' "
                 cursor.execute(query, (form.pid.data,))
                 pdata=cursor.fetchall()
                 q1 = "SELECT doadmission FROM patient WHERE id = %s "
@@ -261,7 +261,7 @@ def billpatient():
                         session['roomcharge']=(delta.days)*4000
                     else:
                         session['roomcharge']=(delta.days)*2000
-                    session['doa'] =(delta.days)
+                    session['doa'] =abs(delta.days)
                     session['dod'] =date_now_str
 
                 q2 = "SELECT medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate FROM medicine_inventory ,issued_medicines WHERE  medicine_inventory.mid =issued_medicines.mid AND issued_medicines.pid= %s "   
@@ -291,6 +291,17 @@ def billpatient():
                 else:
                     flash("Patient not Found")
                     return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
+            
+            elif request.form['action'] == 'update':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "UPDATE patient SET status='Discharged' WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                cursor.close()
+                con.commit()
+                con.close()
+                return render_template("desk/index.html")
+
 
 
         else:
@@ -419,7 +430,7 @@ def issue(issueid,quantity,doi):
     try:
         con=mysql.connect()
         cursor=con.cursor()
-        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s,%s)",(session['pid'],issueid,quantity,doi))
+        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s)",(session['pid'],issueid,quantity))
         con.commit()
         cursor.close()
         con.close()
@@ -452,7 +463,6 @@ def update_inventory(quantity,issueid):
 def diagnostic_home():
     if 'username' in session and 'DS' in session['username']:
         return redirect(url_for('search_diagnostics'))
-    
     return redirect(url_for('login'))
 
 
