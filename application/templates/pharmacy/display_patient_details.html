@@ -1,0 +1,81 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Pharmacy - Search Patient Details
+{% endblock %}
+
+{% block content%}
+{% include "pharmacy/includes/pharmacy_navbar.html" %}
+
+<div class="container-top">
+    <div class="container-fluid">
+        <h2 class="text-center">Patient Details</h2>
+        <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Age</th>
+                <th scope="col">Date Of Admission</th>
+                <th scope="col">Bed Type</th>
+                <th scope="col">Address</th>
+                <th scope="col">City</th>
+                <th scope="col">State</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody class="tbody">
+              <tr>
+                {% for pdata in pdata %}
+                <td>{{pdata[1]}}</td>
+                <td>{{pdata[2]}}</td>
+                <td>{{pdata[3]}}</td>
+                <td>{{pdata[4]}}</td>
+                <td>{{pdata[5]}}</td>
+                <td>{{pdata[6]}}</td>
+                <td>{{pdata[7]}}</td>
+                <td>{{pdata[8]}}</td>
+                <td>{{pdata[9]}}</td>
+                {% endfor %}
+              </tr>
+            </tbody>
+          </table>
+    </div>
+    <br>
+    <div class="container-fluid overflow-auto">
+        {%if mdata %}
+            <h2 class="text-center">Issued Medicines</h2>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Total Cost</th>
+                </thead>
+                <tbody>
+                  {% for row in mdata %}
+                <tr>
+                    
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    
+                </tr>
+                  {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+        <h2 class="text-center"> No Issued Medicines</h2>
+        {% endif %}
+    </div>
+
+    <div class="container-fluid text-center overflow-auto">
+
+      <a class="btn btn-primary" href="{{url_for('issue_medicines')}}" role="button">Issue Medicines</a>
+      <br>
+    </div>
+</div>
+
+{% endblock %}

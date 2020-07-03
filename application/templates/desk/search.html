@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    Desk - Delete
+    Desk - Search
 {% endblock %}
 
 {% block content%}
@@ -13,9 +13,9 @@
             <div class="col-md-8">
                 <br>
                     <div class="card">
-                        <div class="card-header text-center"><strong>Delete Patient Details</strong></div>
+                        <div class="card-header text-center"><strong>Search Patient Details</strong></div>
                         <div class="card-body ">
-                            <form name="patient delete" action="{{url_for('desk_patientdel')}}" method="POST">
+                            <form name="patient Search" action="{{url_for('desk_patientsearch')}}" method="POST">
                                 <div class="text-center">
                                     <label for="patid">Patient ID: </label>
                                     <div class="text-center">
@@ -48,12 +48,11 @@
                                 <div class="form-group row text-center border">
                                     <label for="full_name" class="col-md-4 col-form-label"><b>SSN</b></label>
                                     
-                                    <div class="col-md-6 col-form-label">
+                                    <div class="col-md-6 col-form-label ">
                                         {{row[0]}}
                                     </div>
                                 </div>
-                                
-                                    
+                                  
                                 <div class="form-group row text-center border">
                                     <label for="full_name" class="col-md-4 col-form-label"><b>Full Name</b></label>
                                     
@@ -113,11 +112,6 @@
                                 </div>
                                 
                                 
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" name="action" value="delete" class="btn btn-primary btn-lg" formmethod="POST" >
-                                    Delete
-                                    </button>
-                                </div>
                                 {% endfor %}
                             </form>
                         </div>
@@ -129,5 +123,3 @@
 </main>
 
 {% endblock%}
-
-

@@ -1,33 +1,33 @@
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{url_for('desk_home')}}">HMS</a>
+    <p><h3>HMS</h3></p>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="{{url_for('desk_home')}}">Home</a>
-        </li>
-     
-        <li class="nav-item">
+
+        <li class="nav-item {% if desk_patient_active_page %}active {% endif %}">
           <a class="nav-link" href="{{url_for('activepatients')}}">Active Patient</a>
         </li>
      
-        <li class="nav-item">
+        <li class="nav-item {% if desk_patient_registration_page %}active {% endif %}">
           <a class="nav-link" href="{{url_for('desk_patient')}}">Patient Registration</a>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item {% if desk_patient_update_page %}active {% endif %}">
           <a class="nav-link" href="{{url_for('desk_patient_update')}}">Update Patient</a>
         </li>
-        
-        <li class="nav-item">
+        <li class="nav-item {% if desk_patient_search_page %}active {% endif %}">
+          <a class="nav-link" href="{{url_for('desk_patientsearch')}}">Search</a>
+        </li>
+        <li class="nav-item {% if desk_patient_delete_page %}active {% endif %}">
           <a class="nav-link" href="{{url_for('desk_patientdel')}}">Delete Patient</a>
         </li>
-
-
+        <li class="nav-item {% if desk_patient_billing_page %}active {% endif %}">
+          <a class="nav-link" href="{{url_for('billpatient')}}">Billing</a>
+        </li>
 
       </ul>
       <form class="form-inline my-2 my-lg-0">
