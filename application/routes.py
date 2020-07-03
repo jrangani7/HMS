@@ -379,7 +379,7 @@ def issue_medicines():
                         meddata=update_inventory(quantity,issueid)
                         if status:
                             flash("Medicines Issued and Database Updated !")
-                            return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
+                            return redirect(url_for('issue_medicines')) #clear form previous input if succesfull
                         else:
                             flash("Something Went Wrong !")
                             return render_template('pharmacy/issue_medicines.html',form=form,meddata=meddata)
