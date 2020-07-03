@@ -70,7 +70,8 @@
                         </div>
                         
                     </div>
-                    {% for row in rudtest %}
+                    {% if rudtest %}
+                    
                         <center><h2><u>Patient Details</u></h2></center>
                         <table id="t01">
                             <thead>
@@ -85,7 +86,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                 
+                                {% for row in rudtest %}
                                     <tr>
                                         <td>{{row[1]}}</td>
                                         <td>{{row[2]}}</td>
@@ -95,7 +96,7 @@
                                         <td>{{session['dod']}}</td>
                                         <td>{{row[5]}}</td>
                                     </tr>
-                                       
+                                    {% endfor %}
                             </tbody>
                         </table>
                         <div style="display:flex; flex-direction: row; justify-content: center; align-items: center">
@@ -104,7 +105,8 @@
                             <label>Room Bill:</label>&nbsp;
                             <label>{{session['roomcharge']}}</label>
                         </div>
-                        {% endfor %}
+                        
+                        {% endif %}
                         {% if rdata %}
                         <br><br>
                         <center><h2><u>Pharmacy Charges</u></h2></center>
