@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Medicine Inventory
+{% endblock %}
+
+{% block content%}
+  {% include "pharmacy/includes/pharmacy_navbar.html" %}
+{% if data %}
+
+<center><h2><u>Medicine Inventory</u></h2></center>
+<style>
+table {
+  width:100%;
+}
+table, th, td {
+  border: 1px solid rgb(92, 90, 90);
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+  text-align: left;
+}
+#t01 tr:nth-child(even) {
+  background-color: #eee;
+}
+#t01 tr:nth-child(odd) {
+ background-color: #fff;
+}
+#t01 th {
+  background-color: grey;
+  color: black;
+}
+</style>
+<table id="t01">
+    <thead>
+        <tr>
+            <th>Medicine ID</th>
+            <th>Name</th> 
+            <th>Available quantity</th>
+            <th>rate</th> 
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %} 
+            <tr>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+            </tr>
+        {% endfor %}        
+    </tbody>
+</table>
+
+{% else %}
+
+<p> Medicine Table is empty... </p>
+
+{% endif %}
+
+
+
+{% endblock %}
