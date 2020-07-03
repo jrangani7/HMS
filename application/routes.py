@@ -254,20 +254,21 @@ def billpatient():
                 q1 = "SELECT doadmission FROM patient WHERE id = %s "
                 cursor.execute(query, (form.pid.data,))
                 doa=cursor.fetchone()
-                doastr=str(doa[4])
-                bedtype= doa[5]
-                date_time_table = (datetime.strptime(doastr, '%Y-%m-%d'))
-                date_now_str = (datetime.today().strftime('%Y-%m-%d'))
-                date_now = (datetime.strptime(date_now_str, '%Y-%m-%d'))
-                delta = date_now - date_time_table
-                if(bedtype == 'Single'):
-                    session['roomcharge']=(delta.days)*8000
-                elif(bedtype == 'Semi'):
-                    session['roomcharge']=(delta.days)*4000
-                else:
-                    session['roomcharge']=(delta.days)*2000
-                session['doa'] =(delta.days)
-                session['dod'] =date_now_str
+                if doa:
+                    doastr=str(doa[4])
+                    bedtype= doa[5]
+                    date_time_table = (datetime.strptime(doastr, '%Y-%m-%d'))
+                    date_now_str = (datetime.today().strftime('%Y-%m-%d'))
+                    date_now = (datetime.strptime(date_now_str, '%Y-%m-%d'))
+                    delta = date_now - date_time_table
+                    if(bedtype == 'Single'):
+                        session['roomcharge']=(delta.days)*8000
+                    elif(bedtype == 'Semi'):
+                        session['roomcharge']=(delta.days)*4000
+                    else:
+                        session['roomcharge']=(delta.days)*2000
+                    session['doa'] =(delta.days)
+                    session['dod'] =date_now_str
 
                 q2 = "SELECT medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate FROM medicine_inventory ,issued_medicines WHERE  medicine_inventory.mid =issued_medicines.mid AND issued_medicines.pid= %s "   
                 cursor.execute(q2, (form.pid.data,))
