@@ -242,7 +242,7 @@ def billpatient():
             if request.form['action'] == 'show':
                 con=mysql.connect()
                 cursor=con.cursor()
-                query = "SELECT * FROM patient WHERE id = %s "
+                query = "SELECT * FROM patient WHERE id = %s AND status='Active' "
                 cursor.execute(query, (form.pid.data,))
                 pdata=cursor.fetchall()
                 q1 = "SELECT doadmission FROM patient WHERE id = %s "
@@ -261,7 +261,7 @@ def billpatient():
                         session['roomcharge']=(delta.days)*4000
                     else:
                         session['roomcharge']=(delta.days)*2000
-                    session['doa'] =(delta.days)
+                    session['doa'] =abs(delta.days)
                     session['dod'] =date_now_str
 
                 q2 = "SELECT medicine_inventory.mname,issued_medicines.quantity_issued,medicine_inventory.rate FROM medicine_inventory ,issued_medicines WHERE  medicine_inventory.mid =issued_medicines.mid AND issued_medicines.pid= %s "   
@@ -291,6 +291,17 @@ def billpatient():
                 else:
                     flash("Patient not Found")
                     return render_template("desk/billing.html",rudtest=pdata,rdata=rdata,ddata=ddata,form=form,desk_patient_billing_page=True)
+            
+            elif request.form['action'] == 'update':
+                con=mysql.connect()
+                cursor=con.cursor()
+                query = "UPDATE patient SET status='Discharged' WHERE id = %s "
+                cursor.execute(query, (form.pid.data,))
+                cursor.close()
+                con.commit()
+                con.close()
+                return render_template("desk/index.html")
+
 
 
         else:
