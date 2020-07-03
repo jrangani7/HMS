@@ -33,6 +33,13 @@ Patient Registration
                                       {% endif %}
                                       {% endwith %}
                                   
+
+                                    <div class="form-group row ">
+                                        <label for="permanent_address" class="col-md-4 col-form-label text-md-right ">Aadhar No</label>
+                                        <div class="col-md-6">
+                                            {{form.uid}}
+                                        </div>
+                                    </div>      
                                 
                                 
                                 <div class="form-group row">
@@ -81,13 +88,6 @@ Patient Registration
                                     <label for="permanent_address" class="col-md-4 col-form-label text-md-right">State</label>
                                     <div class="col-md-6">
                                         {{form.state}}
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <label for="permanent_address" class="col-md-4 col-form-label text-md-right">Aadhar No:</label>
-                                    <div class="col-md-6">
-                                        {{form.uid}}
                                     </div>
                                 </div>
 

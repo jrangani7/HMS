@@ -6,8 +6,8 @@ Pharmacy - Search Patient Details
 
 {% block content%}
 {% include "pharmacy/includes/pharmacy_navbar.html" %}
-<div class="container-top">
-    <div class="container-fluid">
+<div class="container-top overflow-auto">
+    <div class="container-fluid overflow-auto">
         <h2 class="text-center">Medicine Inventory</h2>
         <table class="table">
             <thead class="thead-dark">
@@ -32,14 +32,14 @@ Pharmacy - Search Patient Details
           </table>
     </div>
 
-    <div class="container-fluid text-center">
+    <div class="container-fluid text-center overflow-auto">
         <main class="my-form">
             <div class="cotainer">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <br>
                             <div class="card">
-                                <div class="card-header text-center"><strong>Issue Medicines</strong></div>
+                                <div class="card-header text-center overflow-auto"><strong>Issue Medicines</strong></div>
                                 <div class="card-body ">
                                     {% with messages = get_flashed_messages() %}
                                     {% if messages %}
