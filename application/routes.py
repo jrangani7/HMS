@@ -67,7 +67,7 @@ def desk_patient():
                     return render_template("desk/patient_registration.html",form=form) #form is preserved to allow user to make changes
             else:
                 err=list(form.errors.values())
-                flash(str(err[0][0]))
+                flash(str(err[0][0])) #first error is flashed in case of multiple errors
                 return render_template("desk/patient_registration.html",form=form)
         else:
             return render_template("desk/patient_registration.html",form=form,desk_patient_registration_page=True)
