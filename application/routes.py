@@ -310,7 +310,7 @@ def billpatient():
 @app.route('/pharmacy')
 def pharmacy_home():
     if 'username' in session and 'PH' in session['username']:
-        return render_template("pharmacy/index.html")
+        return redirect(url_for("search_patients"))
     return redirect(url_for('login'))
 
 @app.route('/pharmacy/search_medicines',methods=['GET','POST'])
