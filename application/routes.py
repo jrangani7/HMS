@@ -430,7 +430,7 @@ def issue(issueid,quantity,doi):
     try:
         con=mysql.connect()
         cursor=con.cursor()
-        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s,%s)",(session['pid'],issueid,quantity,doi))
+        cursor.execute("INSERT INTO issued_medicines VALUES(%s,%s,%s)",(session['pid'],issueid,quantity))
         con.commit()
         cursor.close()
         con.close()
